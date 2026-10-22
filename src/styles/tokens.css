@@ -1,0 +1,25 @@
+:root {
+  color-scheme: dark;
+
+  /* Marca (CLAUDE.md): negro #000000, rojo #DD0815, blanco #F2F2F2, amarillo #F2E61B. */
+  --color-bg: #000000;
+  --color-surface: #141414;
+  --color-surface-2: #222222;
+  --color-border: #2e2e2e;
+  --color-red: #dd0815;
+  --color-red-strong: #b0060f;
+  --color-smoke: rgba(221, 8, 21, 0.38);
+  --color-yellow: #f2e61b;
+  --color-on-yellow: #000000;
+  --color-text: #f2f2f2;
+  --color-text-muted: #c4c4c4;
+  --color-error: #ff6b6b;
+  --color-backdrop: rgba(0, 0, 0, 0.7);
+  --color-shadow: rgba(0, 0, 0, 0.6);
+
+  --font-display: 'Kaushan Script', cursive;
+  --font-body: 'Poppins', system-ui, sans-serif;
+
+  --radius: 14px;
+  --gutter: 16px;
+}
