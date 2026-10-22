@@ -1,0 +1,665 @@
+{
+  "negocio": "Kairos Foods",
+  "nombre_en_menu_impreso": "Kairos Food's",
+  "moneda": "CRC",
+  "fuente": "Menú impreso que envió Jose el 2026-10-20 (5 imágenes). Transcrito tal cual, incluidas las faltas de ortografía.",
+  "notas_generales": [
+    "¡Agrégale adicionales desde los 500 colones! (en desayunos; la lista de adicionales no aparece en el menú)",
+    "Varias secciones: agrégale papas fritas o aros de cebolla por 1200 adicionales"
+  ],
+  "categorias": [
+    {
+      "id": "desayunos",
+      "nombre": "Desayunos",
+      "nota": "¡Agrégale adicionales desde los 500 colones!",
+      "items": [
+        {
+          "id": "tipico",
+          "nombre": "Típico",
+          "descripcion": "Pinto, huevo, maduro, pan y café",
+          "precio": 1800
+        },
+        {
+          "id": "prensadas",
+          "nombre": "Prensadas",
+          "descripcion": "Tortillas frita con queso",
+          "precio": 800
+        },
+        {
+          "id": "tortillas-con-queso",
+          "nombre": "Tortillas con queso",
+          "descripcion": "",
+          "precio": 1500
+        },
+        {
+          "id": "burrito-desayuno",
+          "nombre": "Burrito",
+          "descripcion": "Tortilla de harina, huevo, gallo pinto y natilla",
+          "precio": 2000
+        },
+        {
+          "id": "sandwich-desayuno",
+          "nombre": "Sándwich",
+          "descripcion": "Huevo, queso",
+          "precio": 1700
+        },
+        {
+          "id": "hamburguesa-desayuno",
+          "nombre": "Hamburguesa",
+          "descripcion": "Huevo, tocineta, queso",
+          "precio": 2200
+        }
+      ],
+      "adicionales_sin_precio": true
+    },
+    {
+      "id": "almuerzos",
+      "nombre": "Almuerzos",
+      "items": [
+        {
+          "id": "casado",
+          "nombre": "Casados",
+          "descripcion": "Arroz, frijoles, guarnición, ensalada, plátano maduro, proteína y bebida",
+          "precio": 2950
+        },
+        {
+          "id": "plato-del-dia",
+          "nombre": "Plato del día",
+          "descripcion": "Preguntar por nuestro platillo especial del día",
+          "precio": 2950
+        }
+      ]
+    },
+    {
+      "id": "sandwich",
+      "nombre": "Sándwich",
+      "items": [
+        {
+          "id": "chicken-pizza-sandwich",
+          "nombre": "Chicken Pizza Sándwich",
+          "descripcion": "Pan artesanal, pechuga de pollo, tocineta, pepperoni, queso mozarella y salsa de pizza",
+          "precio": 3800
+        },
+        {
+          "id": "twister-sandwich",
+          "nombre": "Twister Sándwich",
+          "descripcion": "Pan artesanal, carne o pollo mechado, salsa de queso, tomate, lechuga y salsas",
+          "precio": 2500,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "chicken-philly-sandwich",
+          "nombre": "Chicken Philly Sándwich",
+          "descripcion": "Pan artesanal, cebolla y chile dulce a la plancha, queso mozarella, pechuga de pollo y salsas",
+          "precio": 3800
+        },
+        {
+          "id": "jamon-y-queso",
+          "nombre": "Jamón y Queso",
+          "descripcion": "Pan artesanal, jamón, queso, tomate, lechuga y salsas",
+          "precio": 2000
+        }
+      ]
+    },
+    {
+      "id": "tacos",
+      "nombre": "Tacos",
+      "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "items": [
+        {
+          "id": "taco-sencillo",
+          "nombre": "Taco sencillo",
+          "descripcion": "Tortilla de maíz, carne o pollo mechado, repollo y salsas",
+          "precio": 1000,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "taco-de-queso",
+          "nombre": "Taco de Queso",
+          "descripcion": "Tortilla de harina, queso, repollo y salsas",
+          "precio": 1000
+        },
+        {
+          "id": "supertaco",
+          "nombre": "Supertaco",
+          "descripcion": "Tortilla de maíz grande, carne o pollo mechado, repollo y salsas",
+          "precio": 1850,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "orden-tacos-de-queso",
+          "nombre": "Orden de tacos de Queso",
+          "descripcion": "20 taquitos de queso en tortilla de harina acompañados de una salsa chipotle y una ranch",
+          "precio": 4200
+        }
+      ],
+      "adicionales": [
+        {
+          "id": "papas",
+          "nombre": "Papas fritas",
+          "precio": 1200
+        },
+        {
+          "id": "aros",
+          "nombre": "Aros de cebolla",
+          "precio": 1200
+        }
+      ]
+    },
+    {
+      "id": "nachos",
+      "nombre": "Nachos",
+      "nota": "Duplicá su tamaño por {precio} adicionales",
+      "items": [
+        {
+          "id": "nachos-de-la-casa",
+          "nombre": "Nachos de la Casa",
+          "descripcion": "Tortilla de maíz, frijoles, pollo o carne mechada, natilla, pico de gallo y salsa de queso",
+          "precio": 3000,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "nachos-supremos",
+          "nombre": "Nachos Supremos",
+          "descripcion": "Tortilla de maíz, frijoles, pollo o carne mechada, natilla, pico de gallo, salsa de queso y queso mozarella",
+          "precio": 3500,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        }
+      ],
+      "adicionales": [
+        {
+          "id": "duplicar",
+          "nombre": "Duplicar tamaño",
+          "precio": 2000
+        }
+      ]
+    },
+    {
+      "id": "burritos",
+      "nombre": "Burritos",
+      "items": [
+        {
+          "id": "burrito-sencillo",
+          "nombre": "Burrito sencillo",
+          "descripcion": "Tortilla de harina, pollo o carne, queso mozarella y frijoles",
+          "precio": 1300,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "twister-burrito",
+          "nombre": "Twister burrito",
+          "descripcion": "Tortilla de harina, carne o pollo mechado, frijoles, tomate, lechuga, salsa de queso",
+          "precio": 2600,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        },
+        {
+          "id": "pollo-ranch",
+          "nombre": "Pollo Ranch",
+          "descripcion": "Tortilla de harina, pechuga de pollo frita, tomate, lechuga, pepinillos, salsa de queso y salsa ranch",
+          "precio": 3000
+        },
+        {
+          "id": "tejano-bbq",
+          "nombre": "Tejano BBQ",
+          "descripcion": "Tortilla de harina, pechuga de pollo frita, tocineta, papas tostadas, salsa de queso y bbq",
+          "precio": 3000
+        }
+      ]
+    },
+    {
+      "id": "quesadillas",
+      "nombre": "Quesadillas",
+      "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "items": [
+        {
+          "id": "quesadilla",
+          "nombre": "Quesadilla de pollo o carne",
+          "descripcion": "Tortilla de harina, carne o pollo mechado, queso mozarella, pico de gallo, natilla y salsa de queso",
+          "precio": 3500,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pollo"
+            ]
+          }
+        }
+      ],
+      "adicionales": [
+        {
+          "id": "papas",
+          "nombre": "Papas fritas",
+          "precio": 1200
+        },
+        {
+          "id": "aros",
+          "nombre": "Aros de cebolla",
+          "precio": 1200
+        }
+      ]
+    },
+    {
+      "id": "antojitos",
+      "nombre": "Antojitos",
+      "items": [
+        {
+          "id": "aros-de-cebolla",
+          "nombre": "Orden de Aros de Cebolla",
+          "descripcion": "14 crujientes aros de cebolla",
+          "precio": 3000
+        },
+        {
+          "id": "enyucados",
+          "nombre": "Enyucados",
+          "descripcion": "Carne o queso, repollo y salsas",
+          "precio": 1800,
+          "elegir": {
+            "etiqueta": "Relleno",
+            "opciones": [
+              "Carne",
+              "Queso"
+            ]
+          }
+        },
+        {
+          "id": "empanadas",
+          "nombre": "Empanadas",
+          "descripcion": "",
+          "precio": 1200
+        },
+        {
+          "id": "mozzarella-sticks",
+          "nombre": "Mozarella Sticks",
+          "descripcion": "6 palitos de mozarella acompañados de salsa de pizza",
+          "precio": 3500
+        },
+        {
+          "id": "patacones",
+          "nombre": "Orden de Patacones",
+          "descripcion": "6 patacones, carne mechada, frijoles molidos y pico de gallo",
+          "precio": 3800
+        }
+      ]
+    },
+    {
+      "id": "papas",
+      "nombre": "Papas fritas",
+      "items": [
+        {
+          "id": "papas-fritas",
+          "nombre": "Papas Fritas",
+          "descripcion": "",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 1000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 2700
+            }
+          ],
+          "por_confirmar": "Las grandes cuestan ₡2.700 contra ₡1.000 las regulares; el salto es mayor que en las demás papas."
+        },
+        {
+          "id": "cheese-papas",
+          "nombre": "Cheese Papas",
+          "descripcion": "Papas fritas, salsa de queso",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 1800
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 3000
+            }
+          ]
+        },
+        {
+          "id": "salchipapas",
+          "nombre": "Salchipapas",
+          "descripcion": "Papas fritas, salchicha y salsas",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 2000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 3500
+            }
+          ]
+        },
+        {
+          "id": "cheese-bacon-papas",
+          "nombre": "Cheese Bacon Papas",
+          "descripcion": "Papas fritas, tocineta y salsa de queso",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 2500
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 4300
+            }
+          ]
+        },
+        {
+          "id": "papicarne",
+          "nombre": "Papicarne",
+          "descripcion": "Papas fritas, carne mechada, pico de gallo y salsas",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 3000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 5000
+            }
+          ]
+        },
+        {
+          "id": "papipollo",
+          "nombre": "Papipollo",
+          "descripcion": "Papas fritas, pollo mechado, pico de gallo y salsas",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 3000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 5000
+            }
+          ]
+        },
+        {
+          "id": "papas-pizza",
+          "nombre": "Papas Pizza",
+          "descripcion": "Papas fritas, pepperoni, tocineta y salsa de pizza",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 3000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 5000
+            }
+          ]
+        },
+        {
+          "id": "chicken-cheese-papas",
+          "nombre": "Chicken Cheese Papas",
+          "descripcion": "Papas fritas, trocitos de pollo, tocineta y salsa de queso",
+          "opciones": [
+            {
+              "id": "regular",
+              "nombre": "Regulares",
+              "precio": 3000
+            },
+            {
+              "id": "grande",
+              "nombre": "Grandes",
+              "precio": 5000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pollo-frito",
+      "nombre": "Pollo Frito",
+      "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "items": [
+        {
+          "id": "alitas",
+          "nombre": "Alitas",
+          "descripcion": "",
+          "opciones": [
+            {
+              "id": "6",
+              "nombre": "6 unidades",
+              "precio": 3500
+            },
+            {
+              "id": "12",
+              "nombre": "12 unidades",
+              "precio": 6700
+            },
+            {
+              "id": "18",
+              "nombre": "18 unidades",
+              "precio": 9900
+            }
+          ]
+        },
+        {
+          "id": "boneless-nuggets",
+          "nombre": "Boneless-Nuggets",
+          "descripcion": "",
+          "opciones": [
+            {
+              "id": "6",
+              "nombre": "6 unidades",
+              "precio": 3200
+            },
+            {
+              "id": "12",
+              "nombre": "12 unidades",
+              "precio": 5900
+            },
+            {
+              "id": "18",
+              "nombre": "18 unidades",
+              "precio": 9000
+            }
+          ]
+        },
+        {
+          "id": "strips-de-pollo",
+          "nombre": "Strips de Pollo (200 grs)",
+          "descripcion": "Con acompañamiento",
+          "precio": 4000
+        },
+        {
+          "id": "pollo-frito-2pz",
+          "nombre": "Pollo Frito (2pz)",
+          "descripcion": "",
+          "precio": 1700
+        }
+      ],
+      "adicionales": [
+        {
+          "id": "papas",
+          "nombre": "Papas fritas",
+          "precio": 1200
+        },
+        {
+          "id": "aros",
+          "nombre": "Aros de cebolla",
+          "precio": 1200
+        }
+      ]
+    },
+    {
+      "id": "hamburguesas",
+      "nombre": "Hamburguesas",
+      "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "items": [
+        {
+          "id": "quesoburguesa",
+          "nombre": "Quesoburguesa",
+          "descripcion": "Pan artesanal, torta de carne, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "precio": 1700
+        },
+        {
+          "id": "doble-quesoburguesa",
+          "nombre": "Doble Quesoburguesa",
+          "descripcion": "Pan artesanal, doble torta de carne, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "precio": 2600
+        },
+        {
+          "id": "burguer-con-jamon",
+          "nombre": "Burguer c/ jamón",
+          "descripcion": "Pan artesanal, torta de carne, jamón, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "precio": 1900
+        },
+        {
+          "id": "pollo-burguer",
+          "nombre": "Pollo burguer",
+          "descripcion": "Pan artesanal, pechuga de pollo, queso blanco, lechuga, mayonesa",
+          "precio": 2000
+        },
+        {
+          "id": "bacon-cheese",
+          "nombre": "Bacon & Chesse",
+          "descripcion": "Pan artesanal, torta de carne 150 grs o pechuga de pollo, queso amarillo, tocineta, aros de cebolla y aderezo a elegir",
+          "precio": 3800,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pechuga de pollo"
+            ]
+          }
+        },
+        {
+          "id": "la-explosiva",
+          "nombre": "La Explosiva",
+          "descripcion": "Pan artesanal, torta de carne 150 grs, queso mozarella, cebolla y hongos asados y mayonesa",
+          "precio": 3800
+        },
+        {
+          "id": "pollo-crispy-kool",
+          "nombre": "Pollo Crispy Kool",
+          "descripcion": "Pan artesanal, pechuga de pollo frita, queso amarillo, ensalada coleslaw, pepinillos, chile dulce y aderezo a elegir",
+          "precio": 3800
+        },
+        {
+          "id": "la-boss-burguer",
+          "nombre": "La Boss Burguer",
+          "descripcion": "Pan artesanal, torta de carne 150 grs o pechuga de pollo, queso amarillo, tomate, lechuga, cebolla y aderezo ranch",
+          "precio": 3800,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pechuga de pollo"
+            ]
+          }
+        },
+        {
+          "id": "pizza-burguer",
+          "nombre": "Pizza Burguer",
+          "descripcion": "Pan artesanal, torta de carne 150grs o pechuga de pollo, queso mozarella, tocineta, pepperoni, salsa de pizza",
+          "precio": 3800,
+          "elegir": {
+            "etiqueta": "Proteína",
+            "opciones": [
+              "Carne",
+              "Pechuga de pollo"
+            ]
+          }
+        },
+        {
+          "id": "teriyaki-burguer",
+          "nombre": "Teriyaki Burguer",
+          "descripcion": "Pan artesanal, torta de carne de 150grs, queso amarillo, cebolla y champiñones asados, rodaja de piña, aderezo teriyaki",
+          "precio": 3800
+        },
+        {
+          "id": "la-rascacielos",
+          "nombre": "La Rascacielos",
+          "descripcion": "Pan artesanal, triple torta de carne de 150grs, triple porción de tocineta, triple porción de queso amarillo, aderezo a elegir",
+          "precio": 3800,
+          "por_confirmar": "Lleva triple carne y cuesta lo mismo que las de una sola torta."
+        }
+      ],
+      "adicionales": [
+        {
+          "id": "papas",
+          "nombre": "Papas fritas",
+          "precio": 1200
+        },
+        {
+          "id": "aros",
+          "nombre": "Aros de cebolla",
+          "precio": 1200
+        }
+      ]
+    }
+  ],
+  "pendiente_confirmar_con_el_negocio": [
+    "La Rascacielos (triple carne, tocineta y queso) aparece en ₡3800, igual que las de una sola torta. ¿Es correcto?",
+    "Qué adicionales hay en desayunos y cuánto cuestan (\"desde 500 colones\").",
+    "Tortillas con queso, Empanadas, Papas Fritas y Pollo Frito no tienen descripción. ¿De qué son las empanadas?",
+    "Strips de Pollo \"con acompañamiento\": ¿cuál acompañamiento?",
+    "Proteínas disponibles en el casado y si la bebida es fija.",
+    "Ortografía del menú impreso (Chesse, Burguer, mozarella, \"Tortillas frita\", Food's): ¿la corregimos en las versiones nuevas?"
+  ],
+  "notas_estructura": [
+    "id: estable, lo usa el carrito guardado; no cambiarlo.",
+    "{precio} en una nota se reemplaza por el precio del primer adicional.",
+    "por_confirmar: el sitio muestra el precio como pendiente hasta que Jose lo confirme; borrar la línea al confirmar."
+  ]
+}
