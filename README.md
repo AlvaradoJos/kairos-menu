@@ -53,8 +53,12 @@ npm run preview    # ver el build en http://localhost:4173
 El sitio se publica en **GitHub Pages** con GitHub Actions (`.github/workflows/deploy.yml`, basado en la [guía oficial de Vite](https://vite.dev/guide/static-deploy#github-pages)).
 
 - Cada push o pull request corre pruebas, chequeo de tipos y build. Si algo falla, no se publica.
-- Cada push a `main` que pasa la revisión publica el sitio.
-- La primera vez: en GitHub, *Settings → Pages → Build and deployment → Source: GitHub Actions*.
+- Cada push a `main` que pasa la revisión publica el sitio, **solo si la variable del repo `PUBLICAR` vale `true`**. Mientras no exista, nada se publica.
+- Para activar la publicación la primera vez:
+  1. *Settings → Pages → Build and deployment → Source: GitHub Actions*.
+  2. *Settings → Secrets and variables → Actions → Variables → New repository variable*: `PUBLICAR` = `true`.
+  3. *Actions → Revisar y publicar en GitHub Pages → Run workflow* (o hacer un push a `main`).
+- El repo es privado. En una cuenta gratis, GitHub Pages solo funciona con repos públicos, así que para publicar hay que hacerlo público, tener un plan pago o usar otro hosting (ADR 4).
 - Dominio propio: *Settings → Pages → Custom domain*. La ruta base se ajusta sola.
 
 Lista de lanzamiento y cómo volver atrás: `docs/lanzamiento.md`.

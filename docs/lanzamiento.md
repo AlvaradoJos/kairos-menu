@@ -5,7 +5,8 @@
 - [ ] Número de WhatsApp para pedidos en `src/config.ts` (formato `506XXXXXXXX`).
 - [ ] Probar un pedido real de punta a punta desde un celular a ese número y revisar que el mensaje llegue completo (tildes, ₡, —).
 - [ ] Jose aprueba la vista previa.
-- [ ] Repositorio creado en GitHub y *Settings → Pages → Source: GitHub Actions*.
+- [ ] *Settings → Pages → Source: GitHub Actions* y variable del repo `PUBLICAR` = `true` (sin ella el workflow no publica).
+- [ ] El repo `kairos-menu` es privado: decidir si se hace público (GitHub Pages gratis lo exige), si se paga un plan o si se usa otro hosting.
 
 ## Conviene antes de publicar
 

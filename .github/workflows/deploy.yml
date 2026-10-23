@@ -35,8 +35,9 @@ jobs:
         run: npm run build
 
   deploy:
-    # Solo publica desde main (push o manual); los pull requests se quedan en "check".
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Solo publica desde main (push o manual) y cuando la variable del repo PUBLICAR vale "true"
+    # (Settings → Secrets and variables → Actions → Variables). Sin ella, cada push solo corre "check".
+    if: vars.PUBLICAR == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: check
     permissions:
       contents: read
