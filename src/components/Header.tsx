@@ -8,7 +8,7 @@ export function Header({ whatsappNumber }: Props) {
   return (
     <header className="header">
       <h1 className="header__title">
-        <img className="header__logo" src="/logo.webp" alt="Kairos Foods" width={280} height={280} fetchPriority="high" />
+        <img className="header__logo" src={`${import.meta.env.BASE_URL}logo.webp`} alt="Kairos Foods" width={280} height={280} fetchPriority="high" />
       </h1>
       <p className="header__tagline">Desayunos, almuerzos, hamburguesas, tacos y más. Pide desde tu celular.</p>
       <div className="header__actions">

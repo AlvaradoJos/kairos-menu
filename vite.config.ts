@@ -1,5 +1,5 @@
 /// <reference types="vitest/config" />
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // Política de seguridad solo en el build: el servidor de desarrollo de Vite usa scripts en línea.
@@ -26,9 +26,11 @@ function contentSecurityPolicy(): Plugin {
   };
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  // GitHub Pages sirve el sitio en /<repo>/; el workflow pasa BASE_PATH. Local y dominio propio: "/".
+  base: loadEnv(mode, '.', '').BASE_PATH || '/',
   plugins: [react(), contentSecurityPolicy()],
   test: {
     include: ['src/**/*.test.{ts,tsx}'],
   },
-});
+}));
