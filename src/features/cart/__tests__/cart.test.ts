@@ -146,9 +146,10 @@ describe('setNote', () => {
     expect(setNote([tipico(1, 'algo')], 0, '  ')[0].note).toBeUndefined();
   });
 
-  it('combina con otra línea si queda igual', () => {
+  it('no combina líneas mientras se escribe la nota', () => {
     const cart = setNote([tipico(1), tipico(1, 'sin pan')], 1, '');
-    expect(cart).toEqual([{ itemId: 'tipico', extraIds: [], quantity: 2 }]);
+    expect(cart).toHaveLength(2);
+    expect(cart[1].quantity).toBe(1);
   });
 });
 

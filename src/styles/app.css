@@ -138,8 +138,11 @@ img {
   display: none;
 }
 .section-nav a {
+  display: inline-flex;
   flex: 0 0 auto;
-  padding: 8px 14px;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
   border-radius: 999px;
   background: var(--color-surface-2);
   color: var(--color-text);

@@ -100,6 +100,17 @@ describe('buildOrderMessage', () => {
   });
 });
 
+describe('buildOrderMessage con saltos de línea', () => {
+  it('pone notas, dirección y comentario en una sola línea', () => {
+    const cart: CartLine[] = [{ itemId: 'empanadas', extraIds: [], quantity: 1, note: 'de carne\n\nbien tostadas' }];
+    const form: OrderForm = { ...SPEC_FORM, address: 'Barrio X\ncasa verde', comment: 'tocar\r\nfuerte' };
+    const message = buildOrderMessage(MENU, cart, form, undefined);
+    expect(message).toContain('   Nota: de carne, bien tostadas\n');
+    expect(message).toContain('Dirección: Barrio X, casa verde\n');
+    expect(message).toContain('Comentario: tocar, fuerte\n');
+  });
+});
+
 describe('buildWhatsAppUrl', () => {
   it('deja solo los dígitos del número', () => {
     expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe('https://wa.me/50688887777?text=hola');

@@ -101,9 +101,10 @@ export function setQuantity(cart: CartLine[], index: number, quantity: number): 
   return cart.map((line, i) => (i === index ? { ...line, quantity: whole } : line));
 }
 
+/** Cambia solo la nota. No combina líneas: hacerlo mientras el cliente escribe le movería la línea que edita. */
 export function setNote(cart: CartLine[], index: number, note: string): CartLine[] {
   if (index < 0 || index >= cart.length) return cart;
-  return mergeLines(cart.map((line, i) => (i === index ? { ...line, note } : line)));
+  return cart.map((line, i) => (i === index ? { ...line, note: note.trim() === '' ? undefined : note } : line));
 }
 
 export function removeLine(cart: CartLine[], index: number): CartLine[] {

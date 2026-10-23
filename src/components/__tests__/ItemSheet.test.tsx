@@ -60,6 +60,17 @@ describe('ItemSheet', () => {
     expect(screen.getByRole('button', { name: 'Agregar · ₡3.000' })).toBeTruthy();
   });
 
+  it('pone el foco dentro al abrir y lo devuelve al cerrar', () => {
+    const opener = document.createElement('button');
+    document.body.appendChild(opener);
+    opener.focus();
+    const { unmount } = render(<ItemSheet menu={MENU} item={item('papipollo')} onAdd={() => {}} onClose={() => {}} />);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Cerrar' }));
+    unmount();
+    expect(document.activeElement).toBe(opener);
+    opener.remove();
+  });
+
   it('se cierra con Escape', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

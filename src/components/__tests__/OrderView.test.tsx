@@ -116,6 +116,41 @@ describe('OrderView', () => {
     expect(screen.getByText('Bacon & Chesse')).toBeTruthy();
   });
 
+  it('pone el foco dentro al abrir y se cierra con Escape', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<Harness whatsappNumber="50688887777" onClose={onClose} />);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Cerrar' }));
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('anuncia los datos que faltan y lleva el foco al primer campo', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+    expect(screen.getByRole('alert').textContent).toBe('Faltan datos. Revisa lo marcado en rojo.');
+    expect(document.activeElement).toBe(screen.getByLabelText('Nombre'));
+    expect(screen.getByRole('group', { name: 'Tipo de pedido' }).getAttribute('aria-describedby')).toBeTruthy();
+  });
+
+  it('la pregunta de envío recibe el foco y Escape la cierra sin vaciar', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, 'open').mockImplementation(() => null);
+    const onClear = vi.fn();
+    const onClose = vi.fn();
+    render(<Harness whatsappNumber="50688887777" onClear={onClear} onClose={onClose} />);
+    await user.type(screen.getByLabelText('Nombre'), 'Ana');
+    await user.click(screen.getByLabelText('Para recoger'));
+    await user.click(screen.getByLabelText('Efectivo'));
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'No, volver al pedido' }));
+    await user.keyboard('{Escape}');
+    expect(screen.queryByText('¿Ya enviaste tu pedido?')).toBeNull();
+    expect(onClear).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it('sin número de WhatsApp el botón queda desactivado', () => {
     render(<Harness />);
     const button = screen.getByRole('button', { name: 'Número pendiente' }) as HTMLButtonElement;

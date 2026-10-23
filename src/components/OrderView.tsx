@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { lineTotal, resolveLine, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { Colones, MenuSection } from '../features/menu/types';
@@ -14,6 +14,7 @@ import {
   type PaymentMethod,
 } from '../features/order-form/validation';
 import { buildOrderMessage, buildWhatsAppUrl } from '../features/whatsapp/message';
+import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
 
 interface Props {
@@ -36,7 +37,20 @@ export function OrderView(props: Props) {
   const { menu, lines, form, onFormChange, whatsappNumber, deliveryFee } = props;
   const [submitted, setSubmitted] = useState(false);
   const [askSent, setAskSent] = useState(false);
+  const [focusErrors, setFocusErrors] = useState(0);
+  const orderRef = useRef<HTMLDivElement>(null);
+  const typeErrorId = useId();
+  const paymentErrorId = useId();
   useLockBodyScroll();
+  useDialogFocus(orderRef, props.onClose);
+
+  // Después de un envío con datos faltantes, el foco va al primer campo marcado.
+  useEffect(() => {
+    if (focusErrors === 0) return;
+    orderRef.current
+      ?.querySelector<HTMLElement>('[aria-invalid="true"], fieldset[aria-invalid="true"] input')
+      ?.focus();
+  }, [focusErrors]);
 
   const errors: FormErrors = submitted ? validateOrderForm(form) : {};
   const fee = deliveryFeeFor(form, deliveryFee);
@@ -48,14 +62,18 @@ export function OrderView(props: Props) {
 
   function handleSend() {
     setSubmitted(true);
-    if (!whatsappNumber || lines.length === 0 || hasErrors(validateOrderForm(form))) return;
+    if (hasErrors(validateOrderForm(form))) {
+      setFocusErrors((n) => n + 1);
+      return;
+    }
+    if (!whatsappNumber || lines.length === 0) return;
     const message = buildOrderMessage(menu, lines, form, deliveryFee);
     window.open(buildWhatsAppUrl(whatsappNumber, message), '_blank', 'noopener');
     setAskSent(true);
   }
 
   return (
-    <div className="order" role="dialog" aria-modal="true" aria-label="Tu pedido">
+    <div className="order" ref={orderRef} role="dialog" aria-modal="true" aria-label="Tu pedido">
       <div className="order__inner">
         <div className="order__header">
           <h2 className="order__title">Tu pedido</h2>
@@ -114,7 +132,11 @@ export function OrderView(props: Props) {
               )}
             </Field>
 
-            <fieldset className="option-group">
+            <fieldset
+              className="option-group"
+              aria-invalid={Boolean(errors.type)}
+              aria-describedby={errors.type ? typeErrorId : undefined}
+            >
               <legend>Tipo de pedido</legend>
               <div className="choice-row">
                 {ORDER_TYPES.map((type) => (
@@ -129,7 +151,11 @@ export function OrderView(props: Props) {
                   </label>
                 ))}
               </div>
-              {errors.type && <p className="field__error">{errors.type}</p>}
+              {errors.type && (
+                <p className="field__error" id={typeErrorId}>
+                  {errors.type}
+                </p>
+              )}
             </fieldset>
 
             {form.type === 'express' && (
@@ -169,7 +195,11 @@ export function OrderView(props: Props) {
               </Field>
             )}
 
-            <fieldset className="option-group">
+            <fieldset
+              className="option-group"
+              aria-invalid={Boolean(errors.payment)}
+              aria-describedby={errors.payment ? paymentErrorId : undefined}
+            >
               <legend>Método de pago</legend>
               <div className="choice-row">
                 {PAYMENTS.map((payment) => (
@@ -184,7 +214,11 @@ export function OrderView(props: Props) {
                   </label>
                 ))}
               </div>
-              {errors.payment && <p className="field__error">{errors.payment}</p>}
+              {errors.payment && (
+                <p className="field__error" id={paymentErrorId}>
+                  {errors.payment}
+                </p>
+              )}
             </fieldset>
 
             <Field label="Comentario (opcional)">
@@ -193,7 +227,9 @@ export function OrderView(props: Props) {
               )}
             </Field>
 
-            {hasErrors(errors) && <p className="field__error">Faltan datos. Revisa lo marcado en rojo.</p>}
+            <div role="alert">
+              {hasErrors(errors) && <p className="field__error">Faltan datos. Revisa lo marcado en rojo.</p>}
+            </div>
 
             <button
               type="button"
@@ -208,28 +244,42 @@ export function OrderView(props: Props) {
       </div>
 
       {askSent && (
-        <div className="backdrop backdrop--center">
-          <div className="dialog" role="alertdialog" aria-modal="true" aria-labelledby="sent-title">
-            <h3 id="sent-title">¿Ya enviaste tu pedido?</h3>
-            <p className="item-card__description">Si WhatsApp no se abrió, vuelve al pedido e inténtalo de nuevo.</p>
-            <div className="dialog__actions">
-              <button
-                type="button"
-                className="btn btn--primary"
-                onClick={() => {
-                  props.onClear();
-                  props.onClose();
-                }}
-              >
-                Sí, vaciar carrito
-              </button>
-              <button type="button" className="btn btn--outline" onClick={() => setAskSent(false)}>
-                No, volver al pedido
-              </button>
-            </div>
-          </div>
-        </div>
+        <SentDialog
+          onConfirm={() => {
+            props.onClear();
+            props.onClose();
+          }}
+          onBack={() => setAskSent(false)}
+        />
       )}
+    </div>
+  );
+}
+
+interface SentDialogProps {
+  onConfirm(): void;
+  onBack(): void;
+}
+
+function SentDialog({ onConfirm, onBack }: SentDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const backRef = useRef<HTMLButtonElement>(null);
+  useDialogFocus(dialogRef, onBack, backRef);
+
+  return (
+    <div className="backdrop backdrop--center">
+      <div className="dialog" ref={dialogRef} role="alertdialog" aria-modal="true" aria-labelledby="sent-title">
+        <h3 id="sent-title">¿Ya enviaste tu pedido?</h3>
+        <p className="item-card__description">Si WhatsApp no se abrió, vuelve al pedido e inténtalo de nuevo.</p>
+        <div className="dialog__actions">
+          <button type="button" className="btn btn--primary" onClick={onConfirm}>
+            Sí, vaciar carrito
+          </button>
+          <button type="button" className="btn btn--outline" ref={backRef} onClick={onBack}>
+            No, volver al pedido
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

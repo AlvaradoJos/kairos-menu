@@ -6,6 +6,15 @@ import { ORDER_TYPE_LABEL, PAYMENT_LABEL, type OrderForm } from '../order-form/v
 
 const GREETING = "¡Hola Kairos Food's! Quiero hacer un pedido 🍔";
 
+/** Texto del cliente en una sola línea: un salto de línea se lee en la cocina como otro platillo. */
+function oneLine(text: string): string {
+  return text
+    .split(/\r?\n/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(', ');
+}
+
 export function buildOrderMessage(
   menu: MenuSection[],
   cart: CartLine[],
@@ -23,7 +32,7 @@ export function buildOrderMessage(
     for (const extra of resolved.extras) {
       out.push(`   + ${extra.label} — ${formatColones(extra.price * line.quantity)}`);
     }
-    const note = line.note?.trim();
+    const note = oneLine(line.note ?? '');
     if (note) out.push(`   Nota: ${note}`);
   }
 
@@ -32,15 +41,15 @@ export function buildOrderMessage(
 
   out.push('', `Total: ${formatColones(orderTotal(menu, cart, form, deliveryFee))}`, '');
 
-  out.push(`Nombre: ${form.name.trim()}`);
+  out.push(`Nombre: ${oneLine(form.name)}`);
   if (form.type) out.push(`Tipo: ${ORDER_TYPE_LABEL[form.type]}`);
   if (form.type === 'express') {
-    out.push(`Dirección: ${form.address.trim()}`);
-    if (form.reference.trim()) out.push(`Referencia: ${form.reference.trim()}`);
+    out.push(`Dirección: ${oneLine(form.address)}`);
+    if (oneLine(form.reference)) out.push(`Referencia: ${oneLine(form.reference)}`);
   }
   if (form.type === 'recoger' && form.pickupTime) out.push(`Hora: ${form.pickupTime}`);
   if (form.payment) out.push(`Pago: ${PAYMENT_LABEL[form.payment]}`);
-  if (form.comment.trim()) out.push(`Comentario: ${form.comment.trim()}`);
+  if (oneLine(form.comment)) out.push(`Comentario: ${oneLine(form.comment)}`);
 
   const warnings = orderWarnings(menu, cart, form, deliveryFee);
   if (warnings.length > 0) out.push('', ...warnings.map((w) => `⚠️ ${w}`));

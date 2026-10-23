@@ -1,7 +1,8 @@
-import { useEffect, useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { lineTotal, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { MenuItem, MenuSection } from '../features/menu/types';
+import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
 
 interface Props {
@@ -19,15 +20,9 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
   const [extraIds, setExtraIds] = useState<string[]>([]);
   const [note, setNote] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const sheetRef = useRef<HTMLDivElement>(null);
   useLockBodyScroll();
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  useDialogFocus(sheetRef, onClose);
 
   const line: CartLine = { itemId: item.id, sizeId, choice, extraIds, note, quantity };
   const total = lineTotal(menu, line);
@@ -40,6 +35,7 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
     <div className="backdrop" onClick={onClose}>
       <div
         className="sheet"
+        ref={sheetRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
