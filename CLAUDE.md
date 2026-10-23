@@ -35,6 +35,7 @@ Ubicación y zona de reparto · horario · cómo recibe pedidos hoy (WhatsApp, l
 - Base aprobada: `docs/superpowers/specs/2026-10-22-menu-digital-design.md` (spec) y `docs/superpowers/plans/2026-10-22-menu-digital.md` (plan). Si chocan, gana el spec.
 - Fuente del menú: `menu.json`. Instrucciones de trabajo y paradas de aprobación: `../kairos-foods/PROMPT-sitio-web.md`.
 - Stack: Vite + React + TypeScript, sitio estático. Pruebas con Vitest. Comandos: `npm run dev`, `npm test`, `npm run typecheck`, `npm run build`.
+- Publicar: GitHub Pages con GitHub Actions (`.github/workflows/deploy.yml`). Cómo cambiar precios y publicar: `README.md`. Decisiones: `docs/adr/`. Lista de lanzamiento y cómo volver atrás: `docs/lanzamiento.md`.
 
 ### Estructura
 - `menu.json`: menú (51 platillos, 11 categorías). `src/data/menu.ts` lo lee; no copies precios a mano.
