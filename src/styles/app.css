@@ -50,6 +50,21 @@ img {
   max-width: 100%;
 }
 
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+.icon {
+  display: block;
+  flex-shrink: 0;
+}
+
 /* Botones */
 .btn {
   display: inline-flex;
@@ -591,5 +606,37 @@ img {
     @starting-style {
       transform: scale(0.96);
     }
+  }
+}
+
+/* Estados: opción elegida y hover solo con puntero fino (en el celular el tap no deja hover pegado). */
+.add-btn,
+.sheet__close,
+.qty button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.option:has(input:checked) {
+  box-shadow: inset 0 0 0 2px var(--color-yellow);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover:not(:disabled),
+  .add-btn:hover,
+  .cart-bar:hover {
+    background: var(--color-red-strong);
+  }
+  .btn--outline:hover {
+    background: var(--color-yellow);
+    color: var(--color-on-yellow);
+  }
+  .section-nav a:hover:not(.is-active),
+  .option:hover,
+  .qty button:hover:not(:disabled) {
+    background: var(--color-border);
+  }
+  .sheet__close:hover,
+  .link-btn:hover {
+    color: var(--color-text);
   }
 }

@@ -2,6 +2,7 @@ import { useId, useRef, useState } from 'react';
 import { lineTotal, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { MenuItem, MenuSection } from '../features/menu/types';
+import { Icon } from './Icon';
 import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
 
@@ -50,7 +51,7 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
             {item.pending && <p className="price-pending price-pending--block">Precio por confirmar con el restaurante</p>}
           </div>
           <button type="button" className="sheet__close" onClick={onClose} aria-label="Cerrar">
-            ×
+            <Icon name="close" />
           </button>
         </div>
 
@@ -118,11 +119,11 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
               disabled={quantity <= 1}
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
-              −
+              <Icon name="minus" />
             </button>
             <span aria-live="polite">{quantity}</span>
             <button type="button" aria-label="Sumar uno" onClick={() => setQuantity((q) => q + 1)}>
-              +
+              <Icon name="plus" />
             </button>
           </div>
           <button type="button" className="btn btn--primary" onClick={() => onAdd(line)}>

@@ -14,6 +14,7 @@ import {
   type PaymentMethod,
 } from '../features/order-form/validation';
 import { buildOrderMessage, buildWhatsAppUrl } from '../features/whatsapp/message';
+import { Icon } from './Icon';
 import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
 
@@ -78,7 +79,7 @@ export function OrderView(props: Props) {
         <div className="order__header">
           <h2 className="order__title">Tu pedido</h2>
           <button type="button" className="sheet__close" onClick={props.onClose} aria-label="Cerrar">
-            ×
+            <Icon name="close" />
           </button>
         </div>
 
@@ -308,11 +309,11 @@ function OrderLine({ menu, line, onSetQuantity, onSetNote }: OrderLineProps) {
       <div className="order-line__actions">
         <div className="qty">
           <button type="button" aria-label={`Restar uno de ${name}`} onClick={() => onSetQuantity(line.quantity - 1)}>
-            −
+            <Icon name="minus" />
           </button>
           <span aria-live="polite">{line.quantity}</span>
           <button type="button" aria-label={`Sumar uno de ${name}`} onClick={() => onSetQuantity(line.quantity + 1)}>
-            +
+            <Icon name="plus" />
           </button>
         </div>
         <button type="button" className="link-btn" aria-label={`Quitar ${name}`} onClick={() => onSetQuantity(0)}>

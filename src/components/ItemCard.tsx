@@ -1,5 +1,6 @@
 import { displayPrice } from '../features/menu/price';
 import type { MenuItem } from '../features/menu/types';
+import { Icon } from './Icon';
 
 interface Props {
   item: MenuItem;
@@ -17,7 +18,7 @@ export function ItemCard({ item, onAdd }: Props) {
         <span className="price-pill">{displayPrice(item)}</span>
         {item.pending && <span className="price-pending">Precio por confirmar</span>}
         <button type="button" className="add-btn" onClick={() => onAdd(item)} aria-label={`Agregar ${item.name}`}>
-          +
+          <Icon name="plus" />
         </button>
       </div>
     </article>

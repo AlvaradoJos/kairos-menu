@@ -32,7 +32,7 @@ export function SectionNav({ sections }: Props) {
     const nav = navRef.current;
     const chip = nav?.querySelector<HTMLElement>('.is-active');
     if (!nav || !chip) return;
-    nav.scrollTo({ left: chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2, behavior: 'smooth' });
+    nav.scrollTo?.({ left: chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2, behavior: 'smooth' });
   }, [active]);
 
   return (
