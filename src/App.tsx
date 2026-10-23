@@ -22,12 +22,17 @@ export default function App() {
   const [announcement, setAnnouncement] = useState('');
   const hasPending = cart.lines.some((line) => resolveLine(MENU, line)?.item.pending);
 
+  // Un espacio duro alterno hace que el lector de pantalla repita el aviso del mismo platillo.
+  function announce(name: string) {
+    setAnnouncement((previous) => `Agregado: ${name}${previous.endsWith('\u00A0') ? '' : '\u00A0'}`);
+  }
+
   function handleAdd(item: MenuItem) {
     if (hasOptions(item)) {
       setSelected(item);
     } else {
       cart.add({ itemId: item.id, extraIds: [], quantity: 1 });
-      setAnnouncement(`Agregado: ${item.name}`);
+      announce(item.name);
     }
   }
 
@@ -54,7 +59,7 @@ export default function App() {
           onClose={() => setSelected(null)}
           onAdd={(line) => {
             cart.add(line);
-            setAnnouncement(`Agregado: ${selected.name}`);
+            announce(selected.name);
             setSelected(null);
           }}
         />

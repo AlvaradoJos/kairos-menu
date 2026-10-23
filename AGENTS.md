@@ -31,7 +31,7 @@ Antes de cerrar una tarea: `npm test`, `npm run typecheck` y `npm run build`.
 
 ## Marca
 
-- Logo: `assets/logo-kairos.png` (copia publicada en `public/logo.png`).
+- Logo: `assets/logo-kairos.png` (original). Publicadas: `public/logo.webp` (560 px) e `public/icon-192.png` (ícono).
 - Paleta: negro #000000, rojo #DD0815, blanco #F2F2F2 y amarillo #F2E61B (gorro de chef, títulos y óvalos de precio).
 - Letras: Kaushan Script para títulos de sección y Poppins para el resto.
 

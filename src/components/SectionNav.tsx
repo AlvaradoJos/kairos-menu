@@ -32,7 +32,12 @@ export function SectionNav({ sections }: Props) {
     const nav = navRef.current;
     const chip = nav?.querySelector<HTMLElement>('.is-active');
     if (!nav || !chip) return;
-    nav.scrollTo?.({ left: chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2, behavior: 'smooth' });
+    // El smooth de JavaScript no respeta prefers-reduced-motion por sí solo.
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    nav.scrollTo?.({
+      left: chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2,
+      behavior: reduce ? 'auto' : 'smooth',
+    });
   }, [active]);
 
   return (
