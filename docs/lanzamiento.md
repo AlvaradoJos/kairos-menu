@@ -3,7 +3,7 @@
 ## Antes de publicar (bloquea)
 
 - [ ] Número de WhatsApp para pedidos en `src/config.ts` (formato `506XXXXXXXX`).
-- [ ] Probar un pedido real de punta a punta desde un celular a ese número y revisar si el emoji del saludo (🍔) y los avisos (⚠️) llegan bien. En la página de wa.me se ven como "�"; si llegan así al chat, quitarlos del mensaje.
+- [ ] Probar un pedido real de punta a punta desde un celular a ese número y revisar que el mensaje llegue completo (tildes, ₡, —).
 - [ ] Jose aprueba la vista previa.
 - [ ] Repositorio creado en GitHub y *Settings → Pages → Source: GitHub Actions*.
 

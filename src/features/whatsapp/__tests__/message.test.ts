@@ -23,7 +23,7 @@ describe('buildOrderMessage', () => {
   it('reproduce exactamente el ejemplo de la especificación', () => {
     expect(buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined)).toBe(
       [
-        "¡Hola Kairos Food's! Quiero hacer un pedido 🍔",
+        "¡Hola Kairos Food's! Quiero hacer un pedido",
         '',
         '1× Bacon & Chesse (Pechuga de pollo) — ₡3.800',
         '   + Papas fritas — ₡1.200',
@@ -39,7 +39,7 @@ describe('buildOrderMessage', () => {
         'Pago: SINPE Móvil',
         'Comentario: tocar el timbre',
         '',
-        '⚠️ Costo de envío por confirmar',
+        'Costo de envío por confirmar',
       ].join('\n'),
     );
   });
@@ -54,7 +54,7 @@ describe('buildOrderMessage', () => {
   it('agrega la línea de envío y la suma al total cuando hay costo', () => {
     const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, 1000);
     expect(message).toContain('Envío — ₡1.000\n\nTotal: ₡13.000');
-    expect(message).not.toContain('⚠️');
+    expect(message).not.toContain('por confirmar');
   });
 
   it('para recoger muestra la hora, no la dirección ni avisos', () => {
@@ -64,7 +64,7 @@ describe('buildOrderMessage', () => {
     expect(message).not.toContain('Dirección');
     expect(message).not.toContain('Envío');
     expect(message).not.toContain('Comentario');
-    expect(message).not.toContain('⚠️');
+    expect(message).not.toContain('por confirmar');
   });
 
   it('omite la hora si no se indicó', () => {
@@ -91,7 +91,12 @@ describe('buildOrderMessage', () => {
   it('avisa adicionales por confirmar con nota en desayuno', () => {
     const cart: CartLine[] = [{ itemId: 'tipico', extraIds: [], quantity: 1, note: 'huevo extra' }];
     const message = buildOrderMessage(MENU, cart, SPEC_FORM, undefined);
-    expect(message.endsWith('\n\n⚠️ Adicionales por confirmar\n⚠️ Costo de envío por confirmar')).toBe(true);
+    expect(message.endsWith('\n\nAdicionales por confirmar\nCosto de envío por confirmar')).toBe(true);
+  });
+
+  it('no usa emojis: la página de WhatsApp los muestra rotos', () => {
+    const cart: CartLine[] = [{ itemId: 'tipico', extraIds: [], quantity: 1, note: 'huevo extra' }];
+    expect(buildOrderMessage(MENU, cart, SPEC_FORM, undefined)).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   it('ignora líneas que ya no existen en el menú', () => {

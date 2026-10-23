@@ -39,5 +39,5 @@ Antes de cerrar una tarea: `npm test`, `npm run typecheck` y `npm run build`.
 
 - La lista `pendiente_confirmar_con_el_negocio` de `menu.json` (precio de La Rascacielos, ortografía, adicionales de desayuno, etc.).
 - Los datos de `src/config.ts`.
-- Si los emojis del mensaje (🍔, ⚠️) llegan bien a WhatsApp en el celular; en la página de wa.me se ven como "�".
+- El mensaje de WhatsApp va sin emojis: en la página de wa.me se veían como "�". Reponerlos solo después de probar en un celular real que llegan bien.
 - Dónde publicar y, si se quiere, un dominio propio.

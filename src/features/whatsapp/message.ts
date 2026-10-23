@@ -4,7 +4,8 @@ import type { Colones, MenuSection } from '../menu/types';
 import { deliveryFeeFor, orderTotal, orderWarnings } from '../order-form/totals';
 import { ORDER_TYPE_LABEL, PAYMENT_LABEL, type OrderForm } from '../order-form/validation';
 
-const GREETING = "¡Hola Kairos Food's! Quiero hacer un pedido 🍔";
+// Sin emojis: al abrir el enlace de WhatsApp se ven como "�". Volver a probar en un celular real antes de reponerlos.
+const GREETING = "¡Hola Kairos Food's! Quiero hacer un pedido";
 
 /** Texto del cliente en una sola línea: un salto de línea se lee en la cocina como otro platillo. */
 function oneLine(text: string): string {
@@ -52,7 +53,7 @@ export function buildOrderMessage(
   if (oneLine(form.comment)) out.push(`Comentario: ${oneLine(form.comment)}`);
 
   const warnings = orderWarnings(menu, cart, form, deliveryFee);
-  if (warnings.length > 0) out.push('', ...warnings.map((w) => `⚠️ ${w}`));
+  if (warnings.length > 0) out.push('', ...warnings);
 
   return out.join('\n');
 }
