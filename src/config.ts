@@ -12,5 +12,6 @@ export interface BusinessConfig {
 
 // Datos pendientes del dueño. No inventar: dejar sin definir hasta tenerlos.
 export const config: BusinessConfig = {
+  whatsappNumber: '50670185119', // Confirmado por Jose el 2026-10-24.
   socials: [],
 };
