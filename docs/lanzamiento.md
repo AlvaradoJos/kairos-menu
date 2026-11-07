@@ -2,7 +2,7 @@
 
 ## Antes de publicar (bloquea)
 
-- [ ] Número de WhatsApp para pedidos en `src/config.ts` (formato `506XXXXXXXX`).
+- [ ] Número de WhatsApp para pedidos en la variable del repo `WHATSAPP_NUMBER` (formato `506XXXXXXXX`; ADR 6). Para la demo del curso, un número de pruebas.
 - [ ] Probar un pedido real de punta a punta desde un celular a ese número y revisar que el mensaje llegue completo (tildes, ₡, —).
 - [ ] Jose aprueba la vista previa.
 - [ ] *Settings → Pages → Source: GitHub Actions* y variable del repo `PUBLICAR` = `true` (sin ella el workflow no publica).

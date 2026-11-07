@@ -1,4 +1,5 @@
 import type { Colones } from './features/menu/types';
+import { parseWhatsappNumber } from './features/whatsapp/number';
 
 export interface BusinessConfig {
   /** Formato internacional, solo dígitos o con +, espacios o guiones. Ej.: "50688887777". */
@@ -11,7 +12,9 @@ export interface BusinessConfig {
 }
 
 // Datos pendientes del dueño. No inventar: dejar sin definir hasta tenerlos.
+// El número de WhatsApp no va en el código: sale de VITE_WHATSAPP_NUMBER (archivo .env en local,
+// variable del repo WHATSAPP_NUMBER al publicar). Ver .env.example.
 export const config: BusinessConfig = {
-  whatsappNumber: '50670185119', // Confirmado por Jose el 2026-10-24.
+  whatsappNumber: parseWhatsappNumber(import.meta.env.VITE_WHATSAPP_NUMBER),
   socials: [],
 };

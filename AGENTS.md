@@ -23,7 +23,7 @@ Antes de cerrar una tarea: `npm test`, `npm run typecheck` y `npm run build`.
 - El menú está en `menu.json` (raíz del repo) y es el único archivo que cambia con los precios. `src/data/menu.ts` solo lo lee; una prueba verifica que nombres y precios coincidan.
 - En `menu.json`, `id` no se cambia (lo usa el carrito guardado), `{precio}` en una nota se reemplaza por el precio del adicional y `por_confirmar` muestra el precio como pendiente.
 - No inventar platillos, precios ni descripciones. Lo que no está en el menú se le pregunta al dueño.
-- Los datos del negocio (WhatsApp, costo de envío, horario, dirección, redes) van en `src/config.ts`. Quedan sin definir hasta que el dueño los dé.
+- Los datos del negocio (costo de envío, horario, dirección, redes) van en `src/config.ts`. Quedan sin definir hasta que el dueño los dé. El número de WhatsApp sale de `VITE_WHATSAPP_NUMBER` (`.env` en local, variable del repo `WHATSAPP_NUMBER` al publicar); nunca se escribe en el código, en pruebas ni en capturas.
 - La lógica va en `src/features/*/` como funciones puras con pruebas en `__tests__/`. Los componentes no calculan precios ni arman el texto del pedido.
 - Los colores salen de las variables de `src/styles/tokens.css`. No hay valores hex fuera de ese archivo.
 - Precios en colones enteros, mostrados con `formatColones` (`₡3.800`, punto de miles).

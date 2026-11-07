@@ -39,7 +39,7 @@ Ubicación y zona de reparto · horario · cómo recibe pedidos hoy (WhatsApp, l
 
 ### Estructura
 - `menu.json`: menú (51 platillos, 11 categorías). `src/data/menu.ts` lo lee; no copies precios a mano.
-- `src/config.ts`: datos del negocio (WhatsApp, horario, dirección, redes). `undefined` hasta que Jose los dé.
+- `src/config.ts`: datos del negocio (horario, dirección, redes). `undefined` hasta que Jose los dé. El número de WhatsApp sale de `VITE_WHATSAPP_NUMBER` (`.env` local / variable del repo `WHATSAPP_NUMBER`), nunca del código (ADR 6).
 - `src/features/*`: lógica pura con pruebas en `__tests__/`. `src/components/`: solo UI, no calculan precios.
 - `assets/logo-kairos.png` (logo), `assets/menu-impreso/` (referencia visual). `assets/brand/` y `assets/menu/` son copias de lo mismo.
 
