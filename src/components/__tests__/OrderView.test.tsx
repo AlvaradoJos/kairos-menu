@@ -173,3 +173,73 @@ describe('OrderView', () => {
     expect(screen.queryByRole('button', { name: 'Enviar por WhatsApp' })).toBeNull();
   });
 });
+
+describe('OrderView: ubicación para el express', () => {
+  function mockGeolocation(impl: Geolocation['getCurrentPosition']) {
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: { getCurrentPosition: impl } });
+  }
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: undefined });
+  });
+
+  async function fillExpress(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByLabelText('Nombre'), 'Ana');
+    await user.click(screen.getByLabelText('Express'));
+    await user.type(screen.getByLabelText('Dirección'), 'Barrio X');
+    await user.click(screen.getByLabelText('Efectivo'));
+  }
+
+  it('el botón solo aparece en express', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    expect(screen.queryByRole('button', { name: /ubicación/i })).toBeNull();
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByRole('button', { name: 'Compartir mi ubicación' })).toBeTruthy();
+  });
+
+  it('adjunta el enlace del mapa al mensaje de WhatsApp', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((ok) => ok({ coords: { latitude: 9.9325427, longitude: -84.0795782 } } as GeolocationPosition));
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText('Ubicación lista')).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+
+    const text = new URL(open.mock.calls[0][0] as string).searchParams.get('text') ?? '';
+    expect(text).toContain('Ubicación: https://www.google.com/maps?q=9.932543,-84.079578');
+  });
+
+  it('se puede quitar la ubicación antes de enviar', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((ok) => ok({ coords: { latitude: 9.93, longitude: -84.08 } } as GeolocationPosition));
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    await user.click(screen.getByRole('button', { name: 'Quitar ubicación' }));
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+
+    const text = new URL(open.mock.calls[0][0] as string).searchParams.get('text') ?? '';
+    expect(text).not.toContain('Ubicación');
+  });
+
+  it('si el cliente no da permiso, avisa y deja enviar sin ubicación', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((_ok, fail) =>
+      fail?.({ code: 1, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError),
+    );
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText(/No nos diste permiso/)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+});

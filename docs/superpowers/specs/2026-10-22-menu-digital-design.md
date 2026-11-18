@@ -116,8 +116,9 @@ Una sola página, primero para celular y adaptable a escritorio.
 5. **Barra del carrito:** visible con al menos un platillo. Muestra "N platillos · ₡total · Ver pedido".
 6. **Tu pedido:**
    - Lista de platillos con controles para cambiar la cantidad, quitar y editar la nota.
-   - Formulario: nombre, tipo de pedido (recoger o express), dirección y referencia (si es express), hora de recogida (si es para recoger, opcional), método de pago (efectivo, SINPE Móvil o tarjeta) y comentario.
+   - Formulario: nombre, tipo de pedido (recoger o express), dirección, ubicación (opcional) y referencia (si es express), hora de recogida (si es para recoger, opcional), método de pago (efectivo, SINPE Móvil o tarjeta) y comentario.
    - Botón **"Enviar por WhatsApp"**.
+   - **Ubicación (express, opcional).** Botón **"Compartir mi ubicación"**, que pide el GPS del celular (`features/location`). Si funciona, el botón cambia a "Ubicación lista", con "Ver en el mapa" y "Quitar ubicación". Si el cliente no da permiso, el GPS falla o el navegador no lo permite, se muestra un aviso corto y el pedido se puede enviar igual. La dirección sigue siendo obligatoria, porque el repartidor necesita las señas. Sirve para que Jose calcule el costo del envío al recibir el pedido: el sitio **no** calcula el envío por distancia. El GPS del navegador solo funciona en HTTPS o en `localhost`.
 7. **Pie de página:** horario, dirección y redes, solo los que estén definidos en `config.ts`.
 
 ## Flujo del pedido
@@ -148,7 +149,8 @@ Comentario: tocar el timbre
    - El precio junto al platillo es (precio base o del tamaño) × cantidad. Cada adicional va en su propia línea con (precio del adicional) × cantidad. El total es la suma de todo, igual a `cartTotal`.
    - Si `needsPriceConfirmation`, se agrega "⚠️ Adicionales por confirmar".
    - Si es express y `config.deliveryFee` no está definido, se agrega "⚠️ Costo de envío por confirmar". Si está definido, aparece como línea "Envío" y se suma al total.
-   - Las líneas de datos vacías (comentario, hora) no se incluyen.
+   - Si el cliente compartió su ubicación y el pedido es express, va la línea `Ubicación:` con un enlace de Google Maps con 6 decimales, debajo de la dirección y la referencia. En los pedidos para recoger no se incluye.
+   - Las líneas de datos vacías (comentario, hora, ubicación) no se incluyen.
 3. **Envío.** Se abre `https://wa.me/<número>?text=<mensaje codificado>` en una pestaña nueva.
 4. **Después del envío.** Al volver a la página se pregunta "¿Ya enviaste tu pedido?", con las opciones **"Sí, vaciar carrito"** y **"No, volver al pedido"**. El carrito nunca se vacía solo.
 
@@ -173,6 +175,7 @@ Con Vitest, en los `__tests__/` de cada feature:
 - **Menú:** cada platillo tiene `price` o `sizes` (exactamente uno), todos los precios son enteros positivos y los `id` no se repiten.
 - **Carrito:** totales con tamaños, adicionales y cantidades; combinación de líneas iguales; descarte de líneas inválidas al cargar.
 - **Validación:** cada campo obligatorio y la regla de dirección para express.
+- **Ubicación:** el enlace de Google Maps; permiso negado, GPS no disponible y navegador sin GPS; el botón solo en express, quitar la ubicación y enviar sin ella.
 - **Mensaje:** el ejemplo de arriba sale exacto; los avisos de confirmación aparecen y desaparecen según el caso; el texto se codifica bien en la URL.
 
 Antes de cada publicación se corren `npm test`, `npm run typecheck` y `npm run build`.
@@ -186,3 +189,4 @@ Se arrastran de `docs/MENU.md` y no bloquean la v1:
 - Qué acompañamiento llevan los Strips de Pollo.
 - Lista de adicionales de desayuno.
 - Datos de `config.ts`: WhatsApp, costo de envío, horario, dirección y redes.
+- Cómo cobra el express (por km, por zonas, monto mínimo, hasta dónde llega). Hace falta solo si más adelante el sitio debe calcular el envío solo con la ubicación.

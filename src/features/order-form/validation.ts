@@ -1,3 +1,5 @@
+import type { GeoPoint } from '../location/location';
+
 export type OrderType = 'recoger' | 'express';
 export type PaymentMethod = 'efectivo' | 'sinpe' | 'tarjeta';
 
@@ -6,6 +8,8 @@ export interface OrderForm {
   type: OrderType | '';
   address: string;
   reference: string;
+  /** Punto del GPS que el cliente compartió (solo express). null si no lo compartió. */
+  location: GeoPoint | null;
   /** "HH:MM" del input de hora; vacío si no la indica. */
   pickupTime: string;
   payment: PaymentMethod | '';
@@ -17,6 +21,7 @@ export const EMPTY_FORM: OrderForm = {
   type: '',
   address: '',
   reference: '',
+  location: null,
   pickupTime: '',
   payment: '',
   comment: '',

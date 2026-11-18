@@ -51,6 +51,18 @@ describe('buildOrderMessage', () => {
     expect(message).toContain('Total: ₡6.600');
   });
 
+  it('en express adjunta el enlace de la ubicación debajo de la dirección', () => {
+    const form: OrderForm = { ...SPEC_FORM, reference: 'portón negro', location: { lat: 9.9325427, lng: -84.0795782 } };
+    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).toContain(
+      'Dirección: Barrio X, 200 m sur de la iglesia\nReferencia: portón negro\nUbicación: https://www.google.com/maps?q=9.932543,-84.079578\n',
+    );
+  });
+
+  it('para recoger no manda la ubicación aunque se haya compartido', () => {
+    const form: OrderForm = { ...SPEC_FORM, type: 'recoger', location: { lat: 9.93, lng: -84.08 } };
+    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).not.toContain('Ubicación');
+  });
+
   it('agrega la línea de envío y la suma al total cuando hay costo', () => {
     const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, 1000);
     expect(message).toContain('Envío — ₡1.000\n\nTotal: ₡13.000');

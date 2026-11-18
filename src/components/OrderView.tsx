@@ -1,4 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import {
+  LOCATION_ERROR_TEXT,
+  mapsLink,
+  requestLocation,
+  type GeoPoint,
+  type LocationError,
+} from '../features/location/location';
 import { lineTotal, resolveLine, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { Colones, MenuSection } from '../features/menu/types';
@@ -57,8 +64,12 @@ export function OrderView(props: Props) {
   const fee = deliveryFeeFor(form, deliveryFee);
   const warnings = orderWarnings(menu, lines, form, deliveryFee);
 
+  // El GPS puede tardar varios segundos: al volver, el cambio se aplica sobre el formulario de ese momento.
+  const formRef = useRef(form);
+  formRef.current = form;
+
   function update<K extends keyof OrderForm>(key: K, value: OrderForm[K]) {
-    onFormChange({ ...form, [key]: value });
+    onFormChange({ ...formRef.current, [key]: value });
   }
 
   function handleSend() {
@@ -174,6 +185,7 @@ export function OrderView(props: Props) {
                     />
                   )}
                 </Field>
+                <LocationField value={form.location} onChange={(location) => update('location', location)} />
                 <Field label="Referencia (opcional)">
                   {(id) => (
                     <input
@@ -326,6 +338,57 @@ function OrderLine({ menu, line, onSetQuantity, onSetNote }: OrderLineProps) {
         </label>
         <textarea id={noteId} rows={1} value={line.note ?? ''} onChange={(e) => onSetNote(e.target.value)} />
       </div>
+    </div>
+  );
+}
+
+interface LocationFieldProps {
+  value: GeoPoint | null;
+  onChange(location: GeoPoint | null): void;
+}
+
+/** Botón opcional para mandar el punto exacto. Jose lo usa para calcular el envío; la dirección sigue siendo obligatoria. */
+function LocationField({ value, onChange }: LocationFieldProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<LocationError | null>(null);
+
+  async function share() {
+    setLoading(true);
+    setError(null);
+    try {
+      onChange(await requestLocation());
+    } catch (reason) {
+      setError(reason as LocationError);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="field location">
+      <span className="field__label">Ubicación (opcional)</span>
+      {value ? (
+        <div className="location__ready">
+          <span className="location__status">
+            <Icon name="pin" />
+            Ubicación lista
+          </span>
+          <a href={mapsLink(value)} target="_blank" rel="noopener noreferrer" className="link-btn">
+            Ver en el mapa
+          </a>
+          <button type="button" className="link-btn" onClick={() => onChange(null)}>
+            Quitar ubicación
+          </button>
+        </div>
+      ) : (
+        <button type="button" className="btn btn--outline btn--block" onClick={share} disabled={loading}>
+          <Icon name="pin" />
+          {loading ? 'Buscando tu ubicación…' : 'Compartir mi ubicación'}
+        </button>
+      )}
+      <p className="field__hint" aria-live="polite">
+        {error ? LOCATION_ERROR_TEXT[error] : 'Te decimos el costo del envío al recibir el pedido.'}
+      </p>
     </div>
   );
 }
