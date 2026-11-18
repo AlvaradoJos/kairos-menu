@@ -60,7 +60,11 @@ export function buildOrderMessage(
   return out.join('\n');
 }
 
+/**
+ * Enlace que abre WhatsApp con el mensaje escrito. Usa api.whatsapp.com/send y no el atajo wa.me:
+ * la redirección de wa.me cambia los emojis (p. ej. los que el cliente escribe en una nota) por "�" (D-01).
+ */
 export function buildWhatsAppUrl(phone: string, message: string): string {
-  const base = `https://wa.me/${phone.replace(/\D/g, '')}`;
-  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+  const base = `https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}`;
+  return message ? `${base}&text=${encodeURIComponent(message)}` : base;
 }

@@ -74,12 +74,13 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 | A4 | Carrito con totales, combinación de líneas iguales y guardado en el celular (`localStorage`). | Hecho |
 | A5 | Vista "Tu pedido": cambiar cantidad, quitar platillos y editar notas. | Hecho |
 | A6 | Formulario: nombre, recoger o express, dirección (obligatoria si es express), hora de recogida opcional, método de pago y comentario, con mensajes de error por campo. | Hecho |
-| A7 | Mensaje de WhatsApp armado automáticamente y apertura de `wa.me` con el texto listo. | Hecho |
+| A7 | Mensaje de WhatsApp armado automáticamente y apertura de WhatsApp con el texto listo. | Hecho |
 | A8 | Avisos de "Precio por confirmar", "Costo de envío por confirmar" y adicionales de desayuno por confirmar. | Hecho |
 | A9 | Pregunta "¿Ya enviaste tu pedido?" al volver, sin vaciar el carrito solo. | Hecho |
 | A10 | Accesibilidad básica: controles de 44 px o más, foco en ventanas, sin scroll horizontal a 390 px. | Hecho |
 | A11 | Publicación en GitHub Pages con revisión automática (pruebas, tipos y build). | Configurado, sin publicar |
 | A12 | Número de WhatsApp de pruebas para la demo, separado del número real del negocio. | Semana 3 / 5 |
+| A13 | Ubicación opcional por GPS en pedidos express: el mensaje lleva un enlace de Google Maps. La dirección sigue siendo obligatoria. | Hecho. Agregado el 2026-11-18 como cambio de alcance (`02-prefactibilidad.md` §9.2) |
 
 ### 4.2 Queda afuera (y por qué)
 
@@ -90,10 +91,10 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 | Marcar platillos agotados en tiempo real | Necesita un estado compartido que alguien actualice durante el día; sin servidor no hay dónde guardarlo. El negocio avisa por WhatsApp al confirmar. |
 | Registro o historial de pedidos | Implica guardar datos personales de clientes en un servidor, con la responsabilidad legal que eso trae. Los pedidos quedan en el WhatsApp del negocio. |
 | Cuentas de usuario | Agrega fricción para un pedido rápido y obliga a guardar datos personales. |
-| Cálculo del costo de envío por zona | No se conoce la zona de reparto ni la tarifa. El mensaje dice "Costo de envío por confirmar". |
+| Cálculo del costo de envío por zona o distancia | No se conoce la zona de reparto ni la tarifa. El mensaje dice "Costo de envío por confirmar". El cliente puede compartir su ubicación (A13), pero el envío lo calcula el negocio al recibir el pedido. |
 | Fotos de los platillos | El negocio no ha enviado fotos reales, y no se usan fotos de stock ni generadas que parezcan sus platos. |
 | Precios de adicionales de desayuno | El menú impreso dice "desde ₡500" sin lista. El cliente los pide en notas y el negocio confirma el precio. |
-| Integración con la API de WhatsApp Business o envío automático | Requiere cuenta de empresa aprobada por Meta, servidor y costo por conversación. Con `wa.me` el cliente envía el mensaje desde su propio WhatsApp. |
+| Integración con la API de WhatsApp Business o envío automático | Requiere cuenta de empresa aprobada por Meta, servidor y costo por conversación. Con un enlace de WhatsApp el cliente envía el mensaje desde su propio WhatsApp. |
 | Seguimiento del estado del pedido | Sin servidor no hay cómo notificar. La confirmación la hace el negocio por WhatsApp. |
 | Varios idiomas | El público es local y el menú impreso está en español. |
 | Aplicación nativa (Android/iOS) | El sitio abre en cualquier navegador del celular sin instalar nada. |
@@ -132,7 +133,7 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 **Dependencias**
 
 - El negocio, para confirmar los datos pendientes de `menu.json` (precio de La Rascacielos, adicionales de desayuno, descripciones faltantes, acompañamiento de los Strips de Pollo, proteínas del casado y ortografía) y los datos de `src/config.ts` (horario, dirección, redes, costo de envío).
-- GitHub (repositorio, Actions y Pages) y WhatsApp (`wa.me`).
+- GitHub (repositorio, Actions y Pages) y WhatsApp (enlace `api.whatsapp.com/send`).
 - Node.js 22 o más reciente para desarrollar.
 
 **Riesgos iniciales**
@@ -141,7 +142,7 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 |---|---|---|---|
 | El número real de WhatsApp del negocio está en `src/config.ts` y en el historial de git; si el repo se hace público queda expuesto, y los compañeros que prueben la demo le escribirían al negocio. | Alta | Alto | Sacar el número del código a una variable de entorno, usar un número de pruebas para la demo y decidir qué hacer con el historial antes de hacer público el repo (semanas 3 y 5). |
 | El negocio no responde los datos pendientes a tiempo. | Media | Medio | El sitio ya muestra "por confirmar" y funciona sin esos datos. |
-| `wa.me` muestra mal caracteres especiales en algún celular. | Baja | Medio | Mensaje sin emojis (ADR 3) y prueba en un celular real antes de publicar. |
+| El enlace de WhatsApp muestra mal caracteres especiales en algún celular. | Baja | Medio | Mensaje sin emojis (ADR 3) y prueba en un celular real antes de publicar. |
 | No todos los integrantes logran correr el proyecto el día de la defensa. | Media | Alto | Manual de instalación y ensayo previo con 2 o 3 integrantes (semana 2 y 5). |
 | El repo no puede ser público y Pages no publica. | Media | Medio | Plan pago, otro hosting (Cloudflare Pages o Netlify) o demo local con `npm run preview`. |
 | Cambios de alcance tardíos. | Media | Medio | Control de cambios definido en la semana 2; todo cambio queda registrado y aprobado. |

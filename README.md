@@ -100,7 +100,7 @@ kairos-menu/
 │   │   ├── menu/             Tipos y formato de precios
 │   │   ├── cart/             Carrito y guardado en el celular
 │   │   ├── order-form/       Validación del formulario y totales
-│   │   └── whatsapp/         Mensaje, enlace wa.me y número
+│   │   └── whatsapp/         Mensaje, enlace de WhatsApp y número
 │   ├── components/           Interfaz (no calcula precios) y sus pruebas
 │   ├── styles/               tokens.css (colores) y app.css
 │   └── test/                 Menú de prueba para las pruebas

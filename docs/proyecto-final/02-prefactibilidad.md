@@ -28,7 +28,7 @@ Este documento parte de la propuesta (`01-propuesta.md`). Los códigos A1…A12 
 - **Sin servidor ni base de datos.** El sitio es HTML, CSS, JS e imágenes estáticos (ADR 1).
 - **Datos del menú:** `menu.json` en el repo, leído en el build (ADR 2).
 - **Carrito:** `localStorage` del celular del cliente, con la clave `kairos.cart.v1`.
-- **Envío del pedido:** un enlace `https://wa.me/<número>?text=<mensaje>` que abre WhatsApp en el celular del cliente.
+- **Envío del pedido:** un enlace `https://api.whatsapp.com/send?phone=<número>&text=<mensaje>` que abre WhatsApp en el celular del cliente.
 - **Integración continua y despliegue:** GitHub Actions con dos trabajos. `check` corre pruebas, tipos y build; `deploy` publica solo desde `main` y solo si la variable del repo `PUBLICAR` vale `true` (ADR 4).
 - **Costo mensual:** ₡0 mientras el repo sea público y se use GitHub Pages.
 
@@ -48,7 +48,7 @@ Escala sugerida: 0 = nunca lo ha usado, 1 = lo ha usado en clase, 2 = lo ha usad
 
 | Riesgo | Mitigación |
 |---|---|
-| `wa.me` cambia de comportamiento o muestra mal caracteres especiales (ya pasó con los emojis). | Mensaje sin emojis (ADR 3), prueba automática que lo verifica y prueba manual en un celular real antes de publicar. |
+| El enlace de WhatsApp cambia de comportamiento o muestra mal caracteres especiales (ya pasó con los emojis en `wa.me`, D-01). | Mensaje sin emojis (ADR 3), prueba automática que lo verifica y prueba manual en un celular real antes de publicar. |
 | Ruta base distinta en GitHub Pages (`/<repo>/`) rompe enlaces a JS, logo o fuentes. | El workflow pasa `BASE_PATH` desde `actions/configure-pages`; ya se verificó un build con ruta base (`docs/lanzamiento.md`). |
 | `localStorage` bloqueado (modo privado) o con datos viejos. | `loadCart` devuelve un carrito vacío ante cualquier error y descarta líneas de platillos que ya no existen (pruebas en `storage.test.ts`). |
 | Diferencias de versión de Node entre computadoras del equipo. | Versión mínima documentada (Node 22) y `package-lock.json` en el repo; instalar con `npm ci`. |
@@ -78,7 +78,7 @@ sequenceDiagram
     S->>S: Calcula totales y guarda el carrito
     C->>S: Llena nombre, tipo, dirección y pago
     S->>S: Valida el formulario
-    S->>W: Abre wa.me con el mensaje escrito
+    S->>W: Abre WhatsApp con el mensaje escrito
     C->>W: Revisa y toca Enviar
     W->>N: Llega el pedido completo
     N->>C: Confirma pedido, envío y pago
@@ -144,7 +144,7 @@ sequenceDiagram
 
 - Editor: [PENDIENTE: editor que usa el equipo, por ejemplo VS Code].
 - Git y GitHub (repositorio `kairos-menu`, pull requests, Actions y Pages).
-- Navegador con herramientas de desarrollo (Chrome) y un celular real para probar `wa.me`.
+- Navegador con herramientas de desarrollo (Chrome) y un celular real para probar el enlace de WhatsApp.
 - Herramientas de IA usadas: se documentan en la semana 5.
 
 ### 3.4 Dependencias
@@ -200,9 +200,10 @@ Prioridad: **I** = imprescindible, **D** = deseable, **O** = opcional.
 | RF-10 | Marcar precios y costos por confirmar en la tarjeta, la barra del carrito y el mensaje. | I | A8 | Hecho |
 | RF-11 | Preguntar "¿Ya enviaste tu pedido?" al volver, sin vaciar el carrito solo. | D | A9 | Hecho |
 | RF-12 | Desactivar el envío si no hay número de WhatsApp configurado. | I | A7 | Hecho |
-| RF-13 | Tomar el número de WhatsApp de una variable de entorno, para usar uno de pruebas en la demo. | I | A12 | Por hacer (semana 3) |
+| RF-13 | Tomar el número de WhatsApp de una variable de entorno, para usar uno de pruebas en la demo. | I | A12 | Hecho (semana 3) |
 | RF-14 | Mostrar horario, dirección y redes en el pie de página cuando estén definidos. | O | — | Hecho (sin datos aún) |
 | RF-15 | Sumar el costo de envío al total cuando esté definido. | O | — | Hecho (sin dato aún) |
+| RF-16 | En pedidos express, permitir compartir la ubicación del GPS (opcional) y agregar un enlace de Google Maps al mensaje; si no hay permiso o GPS, avisar y dejar enviar igual. | D | A13 | Hecho (cambio de alcance 2026-11-18) |
 
 **Requisitos no funcionales**
 
@@ -243,7 +244,7 @@ Como cliente, quiero ver cuánto llevo y corregir mi pedido, para no equivocarme
 Como cliente, quiero mandar el pedido ya escrito por WhatsApp, para no tener que redactarlo.
 - Dado que falta el nombre, el tipo o el método de pago, cuando toco "Enviar por WhatsApp", entonces veo un mensaje debajo de cada campo que falta y no se abre WhatsApp.
 - Dado que elijo express sin dirección, entonces veo "Falta la dirección".
-- Dado un formulario válido, cuando toco "Enviar por WhatsApp", entonces se abre `wa.me` con un mensaje que trae cada platillo, sus opciones, sus adicionales, el total, el nombre, el tipo, la dirección (si es express) y el método de pago.
+- Dado un formulario válido, cuando toco "Enviar por WhatsApp", entonces se abre WhatsApp con un mensaje que trae cada platillo, sus opciones, sus adicionales, el total, el nombre, el tipo, la dirección (si es express) y el método de pago.
 - Dado que el total del mensaje se compara con el del carrito, entonces son iguales.
 - Dado que no hay número configurado, entonces el botón dice "Número pendiente" y está desactivado.
 
@@ -271,6 +272,14 @@ Como integrante del equipo, quiero que la demo use un número de WhatsApp de pru
 - Dado que no defino la variable, entonces el botón dice "Número pendiente".
 - Dado el repo, entonces el número real del negocio no aparece en el código, en las pruebas, en los ejemplos ni en las capturas.
 
+**HU-09 · Mandar mi ubicación** (RF-16)
+Como cliente que pide express, quiero mandar mi ubicación del celular, para que el negocio encuentre la casa y calcule el envío.
+- Dado que elijo express, entonces veo el botón "Compartir mi ubicación"; si elijo recoger, no lo veo.
+- Dado que doy permiso y el GPS responde, entonces el mensaje trae una línea `Ubicación:` con un enlace de Google Maps, debajo de la dirección.
+- Dado que compartí la ubicación, cuando toco "Quitar ubicación", entonces el mensaje ya no la trae.
+- Dado que no doy permiso, o el navegador no tiene GPS, entonces veo un aviso corto y puedo enviar el pedido sin ubicación.
+- Dado que compartí la ubicación, entonces la dirección sigue siendo obligatoria.
+
 ## 7. Arquitectura inicial
 
 ### 7.1 Componentes y flujo de datos
@@ -291,7 +300,7 @@ flowchart LR
         CA[cart<br/>líneas, totales, combinar]
         ST[cart/storage<br/>guardar y cargar]
         VA[order-form<br/>validación y totales]
-        WA[whatsapp/message<br/>mensaje y enlace wa.me]
+        WA[whatsapp/message<br/>mensaje y enlace de WhatsApp]
     end
 
     subgraph UI["src/components (solo interfaz)"]
@@ -299,7 +308,7 @@ flowchart LR
     end
 
     LS[(localStorage<br/>del celular)]
-    WME[wa.me → WhatsApp<br/>del cliente]
+    WME[api.whatsapp.com → WhatsApp<br/>del cliente]
     NEG[WhatsApp del negocio]
 
     MJ --> MT --> APP
@@ -340,6 +349,7 @@ Componentes en el código: `Header`, `SectionNav`, `MenuSectionView` + `ItemCard
 |---|---|---|---|
 | Número de WhatsApp del negocio | Hoy en `src/config.ts` y en el historial de git | Si el repo se hace público, queda expuesto; los compañeros que prueben la demo le escribirían al negocio. | Moverlo a una variable de entorno (`.env`, excluido por `.gitignore`), usar un número de pruebas en la demo (semana 3) y decidir qué hacer con el historial antes de hacer público el repo. No aparece en ejemplos, pruebas ni capturas. |
 | Nombre, dirección y comentario del cliente | Solo en la memoria de la página mientras se llena el formulario; no se guardan en `localStorage` | Que se filtren o se guarden sin permiso. | No hay servidor, base de datos ni analítica: el sitio nunca recibe estos datos. Viajan solo en el mensaje que el cliente envía desde su propio WhatsApp. |
+| Ubicación del GPS del cliente (opcional) | Solo en la memoria de la página; no se guarda en `localStorage` | Es un dato personal preciso (la casa del cliente). | Solo se pide si el cliente toca "Compartir mi ubicación" y el navegador pide permiso. Viaja únicamente en el mensaje que el cliente envía; puede quitarla antes de enviar. El sitio no la manda a ningún servidor. |
 | Notas del carrito | `localStorage` del celular del cliente | Otra persona con el mismo celular puede verlas. | Solo contienen lo que el cliente escribe sobre su pedido; el cliente puede vaciar el carrito. Se recomienda no escribir datos personales en las notas. |
 | Datos de prueba | Pruebas automáticas y capturas | Usar datos reales de personas. | Solo datos sintéticos (por ejemplo "Ana", "Barrio X") y números de ejemplo. |
 | Secretos (tokens, contraseñas) | No hay | — | El despliegue usa el token temporal de GitHub Actions; ningún secreto va en el repo. |
@@ -374,7 +384,9 @@ Marco legal de referencia: Ley N.° 8968 de Protección de la Persona frente al 
 | 2026-10-22 | El menú vive en `menu.json` y no en `menu.ts` | Reglas del cliente: un solo lugar para los precios | Equipo de desarrollo (ADR 2) | — |
 | 2026-10-22 | Mensaje de WhatsApp sin emojis | `wa.me` los mostraba como "�" | Negocio (ADR 3) | — |
 | 2026-10-22 | GitHub Pages en vez de Netlify o Cloudflare Pages | Gratis y sin cuentas fuera de GitHub | Propuesta (ADR 4) | — |
-| [PENDIENTE] | Número de WhatsApp en variable de entorno y número de pruebas para la demo | Proteger el número real y no molestar al negocio | [PENDIENTE] | [PENDIENTE] |
+| 2026-11-07 | Número de WhatsApp en variable de entorno y número de pruebas para la demo | Proteger el número real y no molestar al negocio | [PENDIENTE: aprobación del equipo] | Commit `fbd6a6d` |
+| 2026-11-07 | El enlace usa `api.whatsapp.com/send` en vez de `wa.me` (se aparta del spec, que decía `wa.me`) | Defecto D-01: `wa.me` cambia los emojis por "�" | [PENDIENTE: aprobación del equipo] | Semana 4 |
+| 2026-11-18 | Agregar A13 / RF-16 / HU-09: ubicación opcional por GPS en pedidos express (spec actualizado) | Que el negocio encuentre la casa y calcule el envío; no cambia la regla de dirección obligatoria | [PENDIENTE: aprobación del equipo y del negocio] | Commit `d4f9aac` |
 
 ## 10. Fuentes consultadas y decisiones técnicas iniciales
 

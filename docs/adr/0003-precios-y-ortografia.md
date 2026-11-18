@@ -13,3 +13,5 @@ El mensaje de WhatsApp va sin emojis, aunque el ejemplo del spec traía 🍔 y �
 ## Consecuencias
 - Si el negocio aprueba corregir la ortografía, se cambia en `menu.json` y en los textos esperados de algunas pruebas (`Bacon & Chesse`).
 - Una prueba falla si el mensaje vuelve a tener emojis. Para reponerlos, probar antes en un celular real y quitar esa prueba.
+
+**Actualización 2026-11-07 (defecto D-01):** la causa era el atajo `wa.me`: al redirigir a `api.whatsapp.com` cambia cada emoji por "�" (`%EF%BF%BD`). El sitio ahora abre `api.whatsapp.com/send` directo, que los conserva, para que los emojis que el cliente escribe en notas o comentarios lleguen bien. El mensaje del sitio sigue sin emojis hasta probarlo en un celular real.

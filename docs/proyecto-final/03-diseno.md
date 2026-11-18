@@ -21,7 +21,7 @@ Verificación del 2026-11-07, en Chrome emulando un celular de 390 × 844 px, so
 | Agregar 2 Taco sencillo (carne) | La barra muestra 3 platillos y ₡7.000. |
 | Enviar con el formulario vacío | No se abre WhatsApp; aparecen "Falta el nombre", "Falta el tipo de pedido" y "Falta el método de pago". |
 | Elegir express sin dirección | Aparece "Falta la dirección" y no se envía. |
-| Formulario completo | Se abre `https://wa.me/50600000000?text=…` y aparece "¿Ya enviaste tu pedido?". |
+| Formulario completo | Se abre `https://wa.me/50600000000?text=…` (desde la semana 4, `https://api.whatsapp.com/send?phone=50600000000&text=…`, ver D-01) y aparece "¿Ya enviaste tu pedido?". |
 | Carrito guardado | `localStorage` (`kairos.cart.v1`) tiene las dos líneas con sus opciones. |
 
 Mensaje generado (datos sintéticos):
@@ -62,7 +62,7 @@ flowchart TD
     H --> I{¿Formulario válido<br/>y hay número?}
     I -- No --> J[Mensajes de error por campo]
     J --> H
-    I -- Sí --> K[Se arma el mensaje<br/>y se abre wa.me]
+    I -- Sí --> K[Se arma el mensaje<br/>y se abre WhatsApp]
     K --> L[El cliente envía en WhatsApp]
     L --> M{¿Ya enviaste tu pedido?}
     M -- Sí --> N[Se vacía el carrito]
@@ -148,10 +148,12 @@ Regla: los componentes no calculan precios ni arman el texto del pedido. Si una 
 | `order-form/validation` | `validateOrderForm(form)`, `hasErrors(errores)` | Errores por campo ("Falta el nombre"…). |
 | `order-form/totals` | `deliveryFeeFor`, `orderTotal`, `orderWarnings` | Envío, total final y avisos por confirmar. |
 | `whatsapp/message` | `buildOrderMessage(menu, líneas, form, envío)` | Texto del pedido. |
-| | `buildWhatsAppUrl(teléfono, mensaje)` | `https://wa.me/<dígitos>?text=<mensaje codificado>`. |
+| | `buildWhatsAppUrl(teléfono, mensaje)` | `https://api.whatsapp.com/send?phone=<dígitos>&text=<mensaje codificado>` (D-01). |
 | `whatsapp/number` | `parseWhatsappNumber(valor)` | Valida y limpia el número de la variable de entorno. |
+| `location/location` | `requestLocation(geo?)` | Pide el GPS; devuelve `{ lat, lng }` o falla con `'denied'`, `'unavailable'` o `'unsupported'`. |
+| | `mapsLink(punto)` | `https://www.google.com/maps?q=<lat>,<lng>` con 6 decimales. |
 
-Interfaces externas: `wa.me` (se abre como navegación, no como petición) y `localStorage`. No hay API propia ni servidor.
+Interfaces externas: `api.whatsapp.com/send` (se abre como navegación, no como petición), `localStorage` y la geolocalización del navegador (solo si el cliente la pide; funciona en HTTPS o `localhost`). No hay API propia ni servidor.
 
 ## 6. Modelo de datos
 
@@ -248,6 +250,7 @@ classDiagram
       type: 'recoger' | 'express' | ''
       address: string
       reference: string
+      location: GeoPoint | null
       pickupTime: string  "HH:MM"
       payment: 'efectivo' | 'sinpe' | 'tarjeta' | ''
       comment: string
@@ -259,12 +262,17 @@ classDiagram
       address?: string
       socials: label, url []
     }
+    class GeoPoint {
+      lat: number
+      lng: number
+    }
+    OrderForm --> GeoPoint : location (solo express)
     CartLine --> MenuItem : itemId
     OrderForm ..> CartLine : se envía junto con
 ```
 
 - **Carrito:** arreglo de `CartLine` guardado en `localStorage` con la clave `kairos.cart.v1`. Solo guarda ids y lo que eligió el cliente; los precios se recalculan siempre desde `menu.json`.
-- **Formulario:** vive solo en la memoria de la página; **no** se guarda.
+- **Formulario:** vive solo en la memoria de la página; **no** se guarda. Incluye la ubicación, si el cliente la compartió.
 - **Pedido enviado:** no existe como dato en el sitio; es el texto del mensaje que el cliente manda por WhatsApp.
 
 ## 7. Cambios en el repositorio esta semana
@@ -308,5 +316,6 @@ Verificación después de los cambios: `npm test` 116 pruebas en 13 archivos, to
 | Fecha | Cambio | Estado |
 |---|---|---|
 | 2026-11-07 | Agregar RF-13 (número por variable de entorno y número de pruebas para la demo) | Implementado; [PENDIENTE: aprobación del equipo según el control de cambios de `02-prefactibilidad.md`] |
+| 2026-11-18 | Agregar A13 / RF-16 / HU-09 (ubicación opcional por GPS en express) | Implementado en `d4f9aac` con pruebas; [PENDIENTE: aprobación del equipo y del negocio] |
 
 No hubo otros cambios de alcance respecto a `01-propuesta.md`.

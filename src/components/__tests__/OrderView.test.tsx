@@ -42,6 +42,16 @@ function Harness({ whatsappNumber, deliveryFee, onClear = () => {}, onClose = ()
 }
 
 describe('OrderView', () => {
+  it('suma y resta unidades de una línea y recalcula el total', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    await user.click(screen.getByRole('button', { name: 'Sumar uno de Bacon & Chesse' }));
+    expect(screen.getAllByText('₡10.000').length).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', { name: 'Restar uno de Bacon & Chesse' }));
+    expect(screen.queryByText('₡10.000')).toBeNull();
+    expect(screen.getAllByText('₡5.000').length).toBeGreaterThan(0);
+  });
+
   it('muestra el platillo y el total', () => {
     render(<Harness whatsappNumber="50688887777" />);
     expect(screen.getByText('Bacon & Chesse')).toBeTruthy();
@@ -87,8 +97,8 @@ describe('OrderView', () => {
 
     expect(open).toHaveBeenCalledTimes(1);
     const url = open.mock.calls[0][0] as string;
-    expect(url.startsWith('https://wa.me/50688887777?text=')).toBe(true);
-    const text = decodeURIComponent(url.split('?text=')[1]);
+    expect(url.startsWith('https://api.whatsapp.com/send?phone=50688887777&text=')).toBe(true);
+    const text = new URL(url).searchParams.get('text') ?? '';
     expect(text).toContain('1× Bacon & Chesse (Pechuga de pollo) — ₡3.800');
     expect(text).toContain('Nombre: Ana');
     expect(text).toContain('Pago: Efectivo');

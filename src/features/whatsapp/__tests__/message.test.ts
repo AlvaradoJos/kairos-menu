@@ -79,6 +79,11 @@ describe('buildOrderMessage', () => {
     expect(message).not.toContain('por confirmar');
   });
 
+  it('omite la hora si el cliente la escribió y después cambió a express', () => {
+    const form: OrderForm = { ...SPEC_FORM, type: 'express', pickupTime: '18:30' };
+    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).not.toContain('Hora');
+  });
+
   it('omite la hora si no se indicó', () => {
     const form: OrderForm = { ...SPEC_FORM, type: 'recoger', pickupTime: '' };
     expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).not.toContain('Hora');
@@ -129,19 +134,27 @@ describe('buildOrderMessage con saltos de línea', () => {
 });
 
 describe('buildWhatsAppUrl', () => {
+  // D-01: el atajo wa.me cambia los emojis por "�" al redirigir; api.whatsapp.com/send los conserva.
+  const BASE = 'https://api.whatsapp.com/send?phone=50688887777';
+
   it('deja solo los dígitos del número', () => {
-    expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe('https://wa.me/50688887777?text=hola');
+    expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe(`${BASE}&text=hola`);
   });
 
   it('omite el texto si el mensaje está vacío', () => {
-    expect(buildWhatsAppUrl('50688887777', '')).toBe('https://wa.me/50688887777');
+    expect(buildWhatsAppUrl('50688887777', '')).toBe(BASE);
   });
 
-  it('codifica caracteres especiales y el texto llega idéntico', () => {
+  it('no usa el atajo wa.me, que rompe los emojis al redirigir', () => {
+    expect(buildWhatsAppUrl('50688887777', 'hola')).not.toContain('wa.me');
+  });
+
+  it('codifica caracteres especiales y el texto llega idéntico, emojis incluidos', () => {
     const message = 'Calle 5 & 7 #3, ñandú?\nTotal: ₡1.000 🍔 100%';
-    const url = buildWhatsAppUrl('50688887777', message);
-    const text = url.slice('https://wa.me/50688887777?text='.length);
-    expect(text).not.toMatch(/[\s&#?]/);
-    expect(decodeURIComponent(text)).toBe(message);
+    const url = new URL(buildWhatsAppUrl('50688887777', message));
+    expect(url.origin + url.pathname).toBe('https://api.whatsapp.com/send');
+    expect(url.searchParams.get('phone')).toBe('50688887777');
+    expect(url.searchParams.get('text')).toBe(message);
+    expect(url.search).not.toMatch(/[\s#]/);
   });
 });

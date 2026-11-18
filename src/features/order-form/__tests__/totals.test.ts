@@ -14,6 +14,10 @@ describe('deliveryFeeFor', () => {
     expect(deliveryFeeFor(express, undefined)).toBeUndefined();
     expect(deliveryFeeFor(recoger, 1000)).toBeUndefined();
   });
+
+  it('no cobra envío si todavía no se eligió el tipo de pedido', () => {
+    expect(deliveryFeeFor(EMPTY_FORM, 1000)).toBeUndefined();
+  });
 });
 
 describe('orderTotal', () => {
