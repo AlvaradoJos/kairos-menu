@@ -12,7 +12,7 @@
 
 Para que los compañeros y el profesor puedan pedir sin escribirle al negocio. Lo hace el dueño del repo en GitHub; nada de esto se hace desde la computadora sin su OK.
 
-1. **Decidir qué hacer con el historial (D-02), antes de hacer público el repo.** El commit `1840854` tiene el número real del negocio. Opciones:
+1. **Decidir qué hacer con el historial (D-02), antes de hacer público el repo.** Los commits `1840854` y `547d116` tienen el número real del negocio, y `547d116` ya está en `main` en GitHub (el repo es privado). Opciones:
    - **a) Reescribir el historial** con `git filter-repo --replace-text`, cambiando el número por un texto como `NUMERO-REMOVIDO`. Se conservan todos los commits, pero cambian sus códigos (hash): hay que actualizar los que citan los documentos y todos los integrantes vuelven a clonar. Es irreversible en GitHub una vez que se sube con `--force`.
    - **b) Publicar desde un repo nuevo**, por ejemplo `kairos-menu-demo`, con una sola copia limpia del código. El repo privado queda intacto, pero el público no muestra el historial de commits, que el profesor podría querer evaluar.
    - **c) No hacerlo público:** pagar un plan de GitHub con Pages privado o usar otro hosting (ADR 4).
