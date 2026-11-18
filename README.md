@@ -41,11 +41,11 @@ export const config: BusinessConfig = {
 
 ## Instalación y ejecución paso a paso
 
-Requisitos: **Node.js 22 o más reciente** (incluye npm) y **Git**. Probado con Node 24.15.0 y npm 11.12.1 en Windows 10.
+Requisitos: **Node.js 22.22.2 o más reciente dentro de la 22, o 24.15.0 o más reciente** (incluye npm) y **Git**. Lo exige jsdom, que usan las pruebas; con una versión anterior `npm ci` avisa y `npm test` puede fallar. Probado con Node 24.15.0 y npm 11.12.1 en Windows 10. Detalle: `docs/proyecto-final/manual-instalacion.md`.
 
 1. Revisar las versiones:
    ```bash
-   node -v   # v22 o más
+   node -v   # v22.22.2+ o v24.15.0+
    npm -v
    git --version
    ```
