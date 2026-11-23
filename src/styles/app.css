@@ -109,7 +109,9 @@ h3 {
 
 /* Encabezado */
 .header {
-  padding: 32px var(--gutter) 28px;
+  position: relative;
+  /* Arriba deja lugar al botón de idioma para que no tape el logo. */
+  padding: 64px var(--gutter) 28px;
   text-align: center;
   background:
     radial-gradient(ellipse at 15% 0%, var(--color-smoke) 0%, transparent 60%),
@@ -134,6 +136,35 @@ h3 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
+}
+
+/* Cambio de idioma: arriba a la derecha, el activo en amarillo como los precios del menú. */
+.lang-toggle {
+  position: absolute;
+  top: 12px;
+  right: var(--gutter);
+  display: flex;
+  padding: 2px;
+  border: 2px solid var(--color-yellow);
+  border-radius: 999px;
+  background: var(--color-bg);
+}
+.lang-toggle button {
+  min-width: 44px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.lang-toggle button[aria-pressed='true'] {
+  background: var(--color-yellow);
+  color: var(--color-on-yellow);
 }
 
 /* Barra de secciones */
@@ -407,6 +438,33 @@ h3 {
   margin: 6px 0 0;
   color: var(--color-error);
   font-size: 0.9rem;
+}
+.field__hint {
+  margin: 6px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Ubicación del express */
+.location__ready {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 16px;
+}
+.location__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: auto;
+  color: var(--color-yellow);
+  font-weight: 700;
+}
+.location .link-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  font: inherit;
 }
 
 .qty {

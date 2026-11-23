@@ -11,18 +11,22 @@
     {
       "id": "desayunos",
       "nombre": "Desayunos",
+      "nombre_en": "Breakfast",
       "nota": "¡Agrégale adicionales desde los 500 colones!",
+      "nota_en": "Add extras from 500 colones!",
       "items": [
         {
           "id": "tipico",
           "nombre": "Típico",
           "descripcion": "Pinto, huevo, maduro, pan y café",
+          "descripcion_en": "Gallo pinto, egg, sweet plantain, bread and coffee",
           "precio": 1800
         },
         {
           "id": "prensadas",
           "nombre": "Prensadas",
           "descripcion": "Tortillas frita con queso",
+          "descripcion_en": "Fried tortillas with cheese",
           "precio": 800
         },
         {
@@ -35,18 +39,21 @@
           "id": "burrito-desayuno",
           "nombre": "Burrito",
           "descripcion": "Tortilla de harina, huevo, gallo pinto y natilla",
+          "descripcion_en": "Flour tortilla, egg, gallo pinto and natilla (sour cream)",
           "precio": 2000
         },
         {
           "id": "sandwich-desayuno",
           "nombre": "Sándwich",
           "descripcion": "Huevo, queso",
+          "descripcion_en": "Egg, cheese",
           "precio": 1700
         },
         {
           "id": "hamburguesa-desayuno",
           "nombre": "Hamburguesa",
           "descripcion": "Huevo, tocineta, queso",
+          "descripcion_en": "Egg, bacon, cheese",
           "precio": 2200
         }
       ],
@@ -55,17 +62,20 @@
     {
       "id": "almuerzos",
       "nombre": "Almuerzos",
+      "nombre_en": "Lunch",
       "items": [
         {
           "id": "casado",
           "nombre": "Casados",
           "descripcion": "Arroz, frijoles, guarnición, ensalada, plátano maduro, proteína y bebida",
+          "descripcion_en": "Rice, beans, side dish, salad, sweet plantain, protein and a drink",
           "precio": 2950
         },
         {
           "id": "plato-del-dia",
           "nombre": "Plato del día",
           "descripcion": "Preguntar por nuestro platillo especial del día",
+          "descripcion_en": "Ask about our special dish of the day",
           "precio": 2950
         }
       ]
@@ -73,23 +83,31 @@
     {
       "id": "sandwich",
       "nombre": "Sándwich",
+      "nombre_en": "Sandwiches",
       "items": [
         {
           "id": "chicken-pizza-sandwich",
           "nombre": "Chicken Pizza Sándwich",
           "descripcion": "Pan artesanal, pechuga de pollo, tocineta, pepperoni, queso mozarella y salsa de pizza",
+          "descripcion_en": "Artisan bread, chicken breast, bacon, pepperoni, mozzarella cheese and pizza sauce",
           "precio": 3800
         },
         {
           "id": "twister-sandwich",
           "nombre": "Twister Sándwich",
           "descripcion": "Pan artesanal, carne o pollo mechado, salsa de queso, tomate, lechuga y salsas",
+          "descripcion_en": "Artisan bread, shredded beef or chicken, cheese sauce, tomato, lettuce and sauces",
           "precio": 2500,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -97,12 +115,14 @@
           "id": "chicken-philly-sandwich",
           "nombre": "Chicken Philly Sándwich",
           "descripcion": "Pan artesanal, cebolla y chile dulce a la plancha, queso mozarella, pechuga de pollo y salsas",
+          "descripcion_en": "Artisan bread, grilled onion and bell pepper, mozzarella cheese, chicken breast and sauces",
           "precio": 3800
         },
         {
           "id": "jamon-y-queso",
           "nombre": "Jamón y Queso",
           "descripcion": "Pan artesanal, jamón, queso, tomate, lechuga y salsas",
+          "descripcion_en": "Artisan bread, ham, cheese, tomato, lettuce and sauces",
           "precio": 2000
         }
       ]
@@ -110,18 +130,26 @@
     {
       "id": "tacos",
       "nombre": "Tacos",
+      "nombre_en": "Tacos",
       "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "nota_en": "Add fries or onion rings for an extra {precio}",
       "items": [
         {
           "id": "taco-sencillo",
           "nombre": "Taco sencillo",
           "descripcion": "Tortilla de maíz, carne o pollo mechado, repollo y salsas",
+          "descripcion_en": "Corn tortilla, shredded beef or chicken, cabbage and sauces",
           "precio": 1000,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -129,18 +157,25 @@
           "id": "taco-de-queso",
           "nombre": "Taco de Queso",
           "descripcion": "Tortilla de harina, queso, repollo y salsas",
+          "descripcion_en": "Flour tortilla, cheese, cabbage and sauces",
           "precio": 1000
         },
         {
           "id": "supertaco",
           "nombre": "Supertaco",
           "descripcion": "Tortilla de maíz grande, carne o pollo mechado, repollo y salsas",
+          "descripcion_en": "Large corn tortilla, shredded beef or chicken, cabbage and sauces",
           "precio": 1850,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -148,6 +183,7 @@
           "id": "orden-tacos-de-queso",
           "nombre": "Orden de tacos de Queso",
           "descripcion": "20 taquitos de queso en tortilla de harina acompañados de una salsa chipotle y una ranch",
+          "descripcion_en": "20 cheese taquitos in flour tortillas, served with a chipotle sauce and a ranch sauce",
           "precio": 4200
         }
       ],
@@ -155,11 +191,13 @@
         {
           "id": "papas",
           "nombre": "Papas fritas",
+          "nombre_en": "Fries",
           "precio": 1200
         },
         {
           "id": "aros",
           "nombre": "Aros de cebolla",
+          "nombre_en": "Onion rings",
           "precio": 1200
         }
       ]
@@ -167,18 +205,26 @@
     {
       "id": "nachos",
       "nombre": "Nachos",
+      "nombre_en": "Nachos",
       "nota": "Duplicá su tamaño por {precio} adicionales",
+      "nota_en": "Double the size for an extra {precio}",
       "items": [
         {
           "id": "nachos-de-la-casa",
           "nombre": "Nachos de la Casa",
           "descripcion": "Tortilla de maíz, frijoles, pollo o carne mechada, natilla, pico de gallo y salsa de queso",
+          "descripcion_en": "Corn tortilla chips, beans, shredded chicken or beef, natilla (sour cream), pico de gallo and cheese sauce",
           "precio": 3000,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -186,12 +232,18 @@
           "id": "nachos-supremos",
           "nombre": "Nachos Supremos",
           "descripcion": "Tortilla de maíz, frijoles, pollo o carne mechada, natilla, pico de gallo, salsa de queso y queso mozarella",
+          "descripcion_en": "Corn tortilla chips, beans, shredded chicken or beef, natilla (sour cream), pico de gallo, cheese sauce and mozzarella cheese",
           "precio": 3500,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         }
@@ -200,6 +252,7 @@
         {
           "id": "duplicar",
           "nombre": "Duplicar tamaño",
+          "nombre_en": "Double size",
           "precio": 2000
         }
       ]
@@ -207,17 +260,24 @@
     {
       "id": "burritos",
       "nombre": "Burritos",
+      "nombre_en": "Burritos",
       "items": [
         {
           "id": "burrito-sencillo",
           "nombre": "Burrito sencillo",
           "descripcion": "Tortilla de harina, pollo o carne, queso mozarella y frijoles",
+          "descripcion_en": "Flour tortilla, chicken or beef, mozzarella cheese and beans",
           "precio": 1300,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -225,12 +285,18 @@
           "id": "twister-burrito",
           "nombre": "Twister burrito",
           "descripcion": "Tortilla de harina, carne o pollo mechado, frijoles, tomate, lechuga, salsa de queso",
+          "descripcion_en": "Flour tortilla, shredded beef or chicken, beans, tomato, lettuce, cheese sauce",
           "precio": 2600,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         },
@@ -238,6 +304,7 @@
           "id": "pollo-ranch",
           "nombre": "Pollo Ranch",
           "descripcion": "Tortilla de harina, pechuga de pollo frita, tomate, lechuga, pepinillos, salsa de queso y salsa ranch",
+          "descripcion_en": "Flour tortilla, fried chicken breast, tomato, lettuce, pickles, cheese sauce and ranch sauce",
           "precio": 3000
         },
         {
@@ -251,18 +318,26 @@
     {
       "id": "quesadillas",
       "nombre": "Quesadillas",
+      "nombre_en": "Quesadillas",
       "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "nota_en": "Add fries or onion rings for an extra {precio}",
       "items": [
         {
           "id": "quesadilla",
           "nombre": "Quesadilla de pollo o carne",
           "descripcion": "Tortilla de harina, carne o pollo mechado, queso mozarella, pico de gallo, natilla y salsa de queso",
+          "descripcion_en": "Flour tortilla, shredded beef or chicken, mozzarella cheese, pico de gallo, natilla (sour cream) and cheese sauce",
           "precio": 3500,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken"
             ]
           }
         }
@@ -271,11 +346,13 @@
         {
           "id": "papas",
           "nombre": "Papas fritas",
+          "nombre_en": "Fries",
           "precio": 1200
         },
         {
           "id": "aros",
           "nombre": "Aros de cebolla",
+          "nombre_en": "Onion rings",
           "precio": 1200
         }
       ]
@@ -283,23 +360,31 @@
     {
       "id": "antojitos",
       "nombre": "Antojitos",
+      "nombre_en": "Snacks",
       "items": [
         {
           "id": "aros-de-cebolla",
           "nombre": "Orden de Aros de Cebolla",
           "descripcion": "14 crujientes aros de cebolla",
+          "descripcion_en": "14 crispy onion rings",
           "precio": 3000
         },
         {
           "id": "enyucados",
           "nombre": "Enyucados",
           "descripcion": "Carne o queso, repollo y salsas",
+          "descripcion_en": "Beef or cheese, cabbage and sauces",
           "precio": 1800,
           "elegir": {
             "etiqueta": "Relleno",
+            "etiqueta_en": "Filling",
             "opciones": [
               "Carne",
               "Queso"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Cheese"
             ]
           }
         },
@@ -313,12 +398,14 @@
           "id": "mozzarella-sticks",
           "nombre": "Mozarella Sticks",
           "descripcion": "6 palitos de mozarella acompañados de salsa de pizza",
+          "descripcion_en": "6 mozzarella sticks served with pizza sauce",
           "precio": 3500
         },
         {
           "id": "patacones",
           "nombre": "Orden de Patacones",
           "descripcion": "6 patacones, carne mechada, frijoles molidos y pico de gallo",
+          "descripcion_en": "6 patacones (fried green plantain), shredded beef, mashed beans and pico de gallo",
           "precio": 3800
         }
       ]
@@ -326,6 +413,7 @@
     {
       "id": "papas",
       "nombre": "Papas fritas",
+      "nombre_en": "Fries",
       "items": [
         {
           "id": "papas-fritas",
@@ -335,11 +423,13 @@
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 1000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 2700
             }
           ],
@@ -349,15 +439,18 @@
           "id": "cheese-papas",
           "nombre": "Cheese Papas",
           "descripcion": "Papas fritas, salsa de queso",
+          "descripcion_en": "Fries, cheese sauce",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 1800
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 3000
             }
           ]
@@ -366,15 +459,18 @@
           "id": "salchipapas",
           "nombre": "Salchipapas",
           "descripcion": "Papas fritas, salchicha y salsas",
+          "descripcion_en": "Fries, sausage and sauces",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 2000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 3500
             }
           ]
@@ -383,15 +479,18 @@
           "id": "cheese-bacon-papas",
           "nombre": "Cheese Bacon Papas",
           "descripcion": "Papas fritas, tocineta y salsa de queso",
+          "descripcion_en": "Fries, bacon and cheese sauce",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 2500
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 4300
             }
           ]
@@ -400,15 +499,18 @@
           "id": "papicarne",
           "nombre": "Papicarne",
           "descripcion": "Papas fritas, carne mechada, pico de gallo y salsas",
+          "descripcion_en": "Fries, shredded beef, pico de gallo and sauces",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 3000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 5000
             }
           ]
@@ -417,15 +519,18 @@
           "id": "papipollo",
           "nombre": "Papipollo",
           "descripcion": "Papas fritas, pollo mechado, pico de gallo y salsas",
+          "descripcion_en": "Fries, shredded chicken, pico de gallo and sauces",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 3000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 5000
             }
           ]
@@ -434,15 +539,18 @@
           "id": "papas-pizza",
           "nombre": "Papas Pizza",
           "descripcion": "Papas fritas, pepperoni, tocineta y salsa de pizza",
+          "descripcion_en": "Fries, pepperoni, bacon and pizza sauce",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 3000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 5000
             }
           ]
@@ -451,15 +559,18 @@
           "id": "chicken-cheese-papas",
           "nombre": "Chicken Cheese Papas",
           "descripcion": "Papas fritas, trocitos de pollo, tocineta y salsa de queso",
+          "descripcion_en": "Fries, chicken bites, bacon and cheese sauce",
           "opciones": [
             {
               "id": "regular",
               "nombre": "Regulares",
+              "nombre_en": "Regular",
               "precio": 3000
             },
             {
               "id": "grande",
               "nombre": "Grandes",
+              "nombre_en": "Large",
               "precio": 5000
             }
           ]
@@ -469,7 +580,9 @@
     {
       "id": "pollo-frito",
       "nombre": "Pollo Frito",
+      "nombre_en": "Fried Chicken",
       "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "nota_en": "Add fries or onion rings for an extra {precio}",
       "items": [
         {
           "id": "alitas",
@@ -479,16 +592,19 @@
             {
               "id": "6",
               "nombre": "6 unidades",
+              "nombre_en": "6 pieces",
               "precio": 3500
             },
             {
               "id": "12",
               "nombre": "12 unidades",
+              "nombre_en": "12 pieces",
               "precio": 6700
             },
             {
               "id": "18",
               "nombre": "18 unidades",
+              "nombre_en": "18 pieces",
               "precio": 9900
             }
           ]
@@ -501,16 +617,19 @@
             {
               "id": "6",
               "nombre": "6 unidades",
+              "nombre_en": "6 pieces",
               "precio": 3200
             },
             {
               "id": "12",
               "nombre": "12 unidades",
+              "nombre_en": "12 pieces",
               "precio": 5900
             },
             {
               "id": "18",
               "nombre": "18 unidades",
+              "nombre_en": "18 pieces",
               "precio": 9000
             }
           ]
@@ -519,6 +638,7 @@
           "id": "strips-de-pollo",
           "nombre": "Strips de Pollo (200 grs)",
           "descripcion": "Con acompañamiento",
+          "descripcion_en": "With a side",
           "precio": 4000
         },
         {
@@ -532,11 +652,13 @@
         {
           "id": "papas",
           "nombre": "Papas fritas",
+          "nombre_en": "Fries",
           "precio": 1200
         },
         {
           "id": "aros",
           "nombre": "Aros de cebolla",
+          "nombre_en": "Onion rings",
           "precio": 1200
         }
       ]
@@ -544,42 +666,54 @@
     {
       "id": "hamburguesas",
       "nombre": "Hamburguesas",
+      "nombre_en": "Burgers",
       "nota": "Agrégale papas fritas o aros de cebolla por {precio} adicionales",
+      "nota_en": "Add fries or onion rings for an extra {precio}",
       "items": [
         {
           "id": "quesoburguesa",
           "nombre": "Quesoburguesa",
           "descripcion": "Pan artesanal, torta de carne, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "descripcion_en": "Artisan bun, beef patty, American cheese, tomato, lettuce, onion, sauces",
           "precio": 1700
         },
         {
           "id": "doble-quesoburguesa",
           "nombre": "Doble Quesoburguesa",
           "descripcion": "Pan artesanal, doble torta de carne, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "descripcion_en": "Artisan bun, double beef patty, American cheese, tomato, lettuce, onion, sauces",
           "precio": 2600
         },
         {
           "id": "burguer-con-jamon",
           "nombre": "Burguer c/ jamón",
           "descripcion": "Pan artesanal, torta de carne, jamón, queso amarillo, tomate, lechuga, cebolla, salsas",
+          "descripcion_en": "Artisan bun, beef patty, ham, American cheese, tomato, lettuce, onion, sauces",
           "precio": 1900
         },
         {
           "id": "pollo-burguer",
           "nombre": "Pollo burguer",
           "descripcion": "Pan artesanal, pechuga de pollo, queso blanco, lechuga, mayonesa",
+          "descripcion_en": "Artisan bun, chicken breast, white cheese, lettuce, mayonnaise",
           "precio": 2000
         },
         {
           "id": "bacon-cheese",
           "nombre": "Bacon & Chesse",
           "descripcion": "Pan artesanal, torta de carne 150 grs o pechuga de pollo, queso amarillo, tocineta, aros de cebolla y aderezo a elegir",
+          "descripcion_en": "Artisan bun, 150 g beef patty or chicken breast, American cheese, bacon, onion rings and dressing of your choice",
           "precio": 3800,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pechuga de pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken breast"
             ]
           }
         },
@@ -587,24 +721,32 @@
           "id": "la-explosiva",
           "nombre": "La Explosiva",
           "descripcion": "Pan artesanal, torta de carne 150 grs, queso mozarella, cebolla y hongos asados y mayonesa",
+          "descripcion_en": "Artisan bun, 150 g beef patty, mozzarella cheese, grilled onion and mushrooms, and mayonnaise",
           "precio": 3800
         },
         {
           "id": "pollo-crispy-kool",
           "nombre": "Pollo Crispy Kool",
           "descripcion": "Pan artesanal, pechuga de pollo frita, queso amarillo, ensalada coleslaw, pepinillos, chile dulce y aderezo a elegir",
+          "descripcion_en": "Artisan bun, fried chicken breast, American cheese, coleslaw, pickles, bell pepper and dressing of your choice",
           "precio": 3800
         },
         {
           "id": "la-boss-burguer",
           "nombre": "La Boss Burguer",
           "descripcion": "Pan artesanal, torta de carne 150 grs o pechuga de pollo, queso amarillo, tomate, lechuga, cebolla y aderezo ranch",
+          "descripcion_en": "Artisan bun, 150 g beef patty or chicken breast, American cheese, tomato, lettuce, onion and ranch dressing",
           "precio": 3800,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pechuga de pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken breast"
             ]
           }
         },
@@ -612,12 +754,18 @@
           "id": "pizza-burguer",
           "nombre": "Pizza Burguer",
           "descripcion": "Pan artesanal, torta de carne 150grs o pechuga de pollo, queso mozarella, tocineta, pepperoni, salsa de pizza",
+          "descripcion_en": "Artisan bun, 150 g beef patty or chicken breast, mozzarella cheese, bacon, pepperoni, pizza sauce",
           "precio": 3800,
           "elegir": {
             "etiqueta": "Proteína",
+            "etiqueta_en": "Protein",
             "opciones": [
               "Carne",
               "Pechuga de pollo"
+            ],
+            "opciones_en": [
+              "Beef",
+              "Chicken breast"
             ]
           }
         },
@@ -625,12 +773,14 @@
           "id": "teriyaki-burguer",
           "nombre": "Teriyaki Burguer",
           "descripcion": "Pan artesanal, torta de carne de 150grs, queso amarillo, cebolla y champiñones asados, rodaja de piña, aderezo teriyaki",
+          "descripcion_en": "Artisan bun, 150 g beef patty, American cheese, grilled onion and mushrooms, pineapple slice, teriyaki dressing",
           "precio": 3800
         },
         {
           "id": "la-rascacielos",
           "nombre": "La Rascacielos",
           "descripcion": "Pan artesanal, triple torta de carne de 150grs, triple porción de tocineta, triple porción de queso amarillo, aderezo a elegir",
+          "descripcion_en": "Artisan bun, triple 150 g beef patty, triple serving of bacon, triple serving of American cheese, dressing of your choice",
           "precio": 3800,
           "por_confirmar": "Lleva triple carne y cuesta lo mismo que las de una sola torta."
         }
@@ -639,11 +789,13 @@
         {
           "id": "papas",
           "nombre": "Papas fritas",
+          "nombre_en": "Fries",
           "precio": 1200
         },
         {
           "id": "aros",
           "nombre": "Aros de cebolla",
+          "nombre_en": "Onion rings",
           "precio": 1200
         }
       ]
@@ -655,11 +807,13 @@
     "Tortillas con queso, Empanadas, Papas Fritas y Pollo Frito no tienen descripción. ¿De qué son las empanadas?",
     "Strips de Pollo \"con acompañamiento\": ¿cuál acompañamiento?",
     "Proteínas disponibles en el casado y si la bebida es fija.",
-    "Ortografía del menú impreso (Chesse, Burguer, mozarella, \"Tortillas frita\", Food's): ¿la corregimos en las versiones nuevas?"
+    "Ortografía del menú impreso (Chesse, Burguer, mozarella, \"Tortillas frita\", Food's): ¿la corregimos en las versiones nuevas?",
+    "Tejano BBQ lleva \"papas tostadas\": ¿son papas fritas tostadas o papitas de paquete? Hasta saberlo, en inglés se muestra la descripción en español."
   ],
   "notas_estructura": [
     "id: estable, lo usa el carrito guardado; no cambiarlo.",
     "{precio} en una nota se reemplaza por el precio del primer adicional.",
-    "por_confirmar: el sitio muestra el precio como pendiente hasta que Jose lo confirme; borrar la línea al confirmar."
+    "por_confirmar: el sitio muestra el precio como pendiente hasta que Jose lo confirme; borrar la línea al confirmar.",
+    "Campos _en (nombre_en, nota_en, descripcion_en, etiqueta_en, opciones_en): texto en inglés, opcional. Si falta, la página muestra el español. Los nombres de los platillos no se traducen."
   ]
 }

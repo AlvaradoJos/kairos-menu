@@ -1,9 +1,13 @@
+// Hook del carrito para React. Lo usa App. La lógica vive en cart.ts y el guardado en storage.ts.
+
 import { useEffect, useState } from 'react';
 import type { MenuSection } from '../menu/types';
-import * as Cart from './cart';
+import { addLine, cartTotal, itemCount, setNote, setQuantity, type CartLine } from './cart';
 import { browserStore, loadCart, saveCart } from './storage';
 
+/** Estado del carrito, guardado en localStorage en cada cambio, con sus acciones y totales. */
 export function useCart(menu: MenuSection[]) {
+  // useState con función: el almacenamiento se abre y el carrito se lee una sola vez, al montar.
   const [store] = useState(browserStore);
   const [lines, setLines] = useState(() => loadCart(store, menu));
 
@@ -13,11 +17,11 @@ export function useCart(menu: MenuSection[]) {
 
   return {
     lines,
-    total: Cart.cartTotal(menu, lines),
-    count: Cart.itemCount(lines),
-    add: (line: Cart.CartLine) => setLines((current) => Cart.addLine(current, line)),
-    setQuantity: (index: number, quantity: number) => setLines((current) => Cart.setQuantity(current, index, quantity)),
-    setNote: (index: number, note: string) => setLines((current) => Cart.setNote(current, index, note)),
+    total: cartTotal(menu, lines),
+    count: itemCount(lines),
+    add: (line: CartLine) => setLines((current) => addLine(current, line)),
+    setQuantity: (index: number, quantity: number) => setLines((current) => setQuantity(current, index, quantity)),
+    setNote: (index: number, note: string) => setLines((current) => setNote(current, index, note)),
     clear: () => setLines([]),
   };
 }

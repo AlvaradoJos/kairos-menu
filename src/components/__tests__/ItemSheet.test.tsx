@@ -15,6 +15,19 @@ function item(id: string): MenuItem {
 }
 
 describe('ItemSheet', () => {
+  it('tocar dentro de la ventana no la cierra; tocar el fondo sí', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<ItemSheet menu={MENU} item={item('bacon-cheese')} onAdd={() => {}} onClose={onClose} />);
+
+    await user.click(screen.getByRole('heading', { name: 'Bacon & Chesse' }));
+    await user.click(screen.getByLabelText('Pechuga de pollo'));
+    expect(onClose).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('dialog').parentElement!);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
   it('actualiza el precio con el tamaño y la cantidad, y agrega la línea', async () => {
     const user = userEvent.setup();
     const onAdd = vi.fn();

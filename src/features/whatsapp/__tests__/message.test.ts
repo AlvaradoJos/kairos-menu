@@ -51,6 +51,32 @@ describe('buildOrderMessage', () => {
     expect(message).toContain('Total: ₡6.600');
   });
 
+  it('en express adjunta los enlaces de Google Maps y Waze debajo de la dirección y la referencia', () => {
+    const form: OrderForm = { ...SPEC_FORM, reference: 'portón negro', location: { lat: 9.9325427, lng: -84.0795782 } };
+    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).toContain(
+      [
+        'Dirección: Barrio X, 200 m sur de la iglesia',
+        'Referencia: portón negro',
+        'Ubicación (Google Maps): https://www.google.com/maps?q=9.932543,-84.079578',
+        'Waze: https://waze.com/ul?ll=9.932543,-84.079578&navigate=yes',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('en express sin ubicación compartida no agrega enlaces', () => {
+    const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined);
+    expect(message).not.toContain('Ubicación');
+    expect(message).not.toContain('Waze');
+  });
+
+  it('para recoger no manda la ubicación aunque se haya compartido', () => {
+    const form: OrderForm = { ...SPEC_FORM, type: 'recoger', location: { lat: 9.93, lng: -84.08 } };
+    const message = buildOrderMessage(MENU, SPEC_CART, form, undefined);
+    expect(message).not.toContain('Ubicación');
+    expect(message).not.toContain('Waze');
+  });
+
   it('agrega la línea de envío y la suma al total cuando hay costo', () => {
     const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, 1000);
     expect(message).toContain('Envío — ₡1.000\n\nTotal: ₡13.000');
@@ -65,6 +91,11 @@ describe('buildOrderMessage', () => {
     expect(message).not.toContain('Envío');
     expect(message).not.toContain('Comentario');
     expect(message).not.toContain('por confirmar');
+  });
+
+  it('omite la hora si el cliente la escribió y después cambió a express', () => {
+    const form: OrderForm = { ...SPEC_FORM, type: 'express', pickupTime: '18:30' };
+    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).not.toContain('Hora');
   });
 
   it('omite la hora si no se indicó', () => {
@@ -99,6 +130,18 @@ describe('buildOrderMessage', () => {
     expect(buildOrderMessage(MENU, cart, SPEC_FORM, undefined)).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
+  it('avisa el idioma del cliente si usó la página en inglés; el resto sigue en español', () => {
+    const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined, 'en');
+    expect(message).toContain('Comentario: tocar el timbre\nIdioma del cliente: inglés\n');
+    expect(message).toContain('Tipo: Express');
+    expect(message).toContain('Pago: SINPE Móvil');
+  });
+
+  it('no agrega la línea de idioma si el cliente usó la página en español', () => {
+    expect(buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined, 'es')).not.toContain('Idioma');
+    expect(buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined)).not.toContain('Idioma');
+  });
+
   it('ignora líneas que ya no existen en el menú', () => {
     const cart: CartLine[] = [...SPEC_CART, { itemId: 'no-existe', extraIds: [], quantity: 1 }];
     expect(buildOrderMessage(MENU, cart, SPEC_FORM, undefined)).toContain('Total: ₡12.000');
@@ -117,19 +160,38 @@ describe('buildOrderMessage con saltos de línea', () => {
 });
 
 describe('buildWhatsAppUrl', () => {
+  // D-01: el atajo wa.me cambia los emojis por "�" al redirigir; api.whatsapp.com/send los conserva.
+  const BASE = 'https://api.whatsapp.com/send?phone=50688887777';
+
   it('deja solo los dígitos del número', () => {
-    expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe('https://wa.me/50688887777?text=hola');
+    expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe(`${BASE}&text=hola`);
+  });
+
+  it('acepta el número con +, espacios y guiones', () => {
+    expect(buildWhatsAppUrl('+506 8888-7777', '')).toBe(BASE);
+    expect(buildWhatsAppUrl('506-8888-7777', '')).toBe(BASE);
+    expect(buildWhatsAppUrl(' +506 8888 7777 ', '')).toBe(BASE);
+  });
+
+  it('codifica tildes, ₡ y saltos de línea con encodeURIComponent', () => {
+    const url = buildWhatsAppUrl('50688887777', 'Dirección: Barrio Ñ\nTotal: ₡3.800');
+    expect(url).toBe(`${BASE}&text=Direcci%C3%B3n%3A%20Barrio%20%C3%91%0ATotal%3A%20%E2%82%A13.800`);
   });
 
   it('omite el texto si el mensaje está vacío', () => {
-    expect(buildWhatsAppUrl('50688887777', '')).toBe('https://wa.me/50688887777');
+    expect(buildWhatsAppUrl('50688887777', '')).toBe(BASE);
   });
 
-  it('codifica caracteres especiales y el texto llega idéntico', () => {
+  it('no usa el atajo wa.me, que rompe los emojis al redirigir', () => {
+    expect(buildWhatsAppUrl('50688887777', 'hola')).not.toContain('wa.me');
+  });
+
+  it('codifica caracteres especiales y el texto llega idéntico, emojis incluidos', () => {
     const message = 'Calle 5 & 7 #3, ñandú?\nTotal: ₡1.000 🍔 100%';
-    const url = buildWhatsAppUrl('50688887777', message);
-    const text = url.slice('https://wa.me/50688887777?text='.length);
-    expect(text).not.toMatch(/[\s&#?]/);
-    expect(decodeURIComponent(text)).toBe(message);
+    const url = new URL(buildWhatsAppUrl('50688887777', message));
+    expect(url.origin + url.pathname).toBe('https://api.whatsapp.com/send');
+    expect(url.searchParams.get('phone')).toBe('50688887777');
+    expect(url.searchParams.get('text')).toBe(message);
+    expect(url.search).not.toMatch(/[\s#]/);
   });
 });

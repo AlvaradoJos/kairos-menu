@@ -1,10 +1,13 @@
+// Pantalla principal: encabezado, menú, barra del carrito y las ventanas del platillo y del pedido.
+// Lo monta main.tsx dentro de LanguageProvider. El menú sale de MENU (menu.json) y el carrito de useCart.
+
 import { useState } from 'react';
 import { CartBar } from './components/CartBar';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { ItemSheet } from './components/ItemSheet';
 import { MenuSectionView } from './components/MenuSectionView';
-import { OrderView } from './components/OrderView';
+import { OrderView } from './components/order/OrderView';
 import { SectionNav } from './components/SectionNav';
 import { config } from './config';
 import { MENU } from './data/menu';
@@ -13,8 +16,11 @@ import { useCart } from './features/cart/useCart';
 import { hasOptions } from './features/menu/price';
 import type { MenuItem } from './features/menu/types';
 import { EMPTY_FORM, type OrderForm } from './features/order-form/validation';
+import { useLanguage } from './i18n/LanguageContext';
 
+/** Arma la página y guarda qué ventana está abierta y el formulario del pedido. */
 export default function App() {
+  const { t } = useLanguage();
   const cart = useCart(MENU);
   const [selected, setSelected] = useState<MenuItem | null>(null);
   const [orderOpen, setOrderOpen] = useState(false);
@@ -24,7 +30,7 @@ export default function App() {
 
   // Un espacio duro alterno hace que el lector de pantalla repita el aviso del mismo platillo.
   function announce(name: string) {
-    setAnnouncement((previous) => `Agregado: ${name}${previous.endsWith('\u00A0') ? '' : '\u00A0'}`);
+    setAnnouncement((previous) => `${t.menu.added(name)}${previous.endsWith('\u00A0') ? '' : '\u00A0'}`);
   }
 
   function handleAdd(item: MenuItem) {

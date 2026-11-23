@@ -4,3 +4,11 @@ dist
 .taste-skill
 .impeccable
 .lighthouse
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+graphify-out/

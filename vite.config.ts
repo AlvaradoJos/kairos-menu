@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => ({
   base: loadEnv(mode, '.', '').BASE_PATH || '/',
   plugins: [react(), contentSecurityPolicy()],
   test: {
-    include: ['src/**/*.test.{ts,tsx}'],
+    // scripts/: pruebas en JavaScript de los scripts del workflow.
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.mjs'],
   },
 }));

@@ -28,6 +28,20 @@ const tipico: CartLine = { itemId: 'tipico', extraIds: [], quantity: 2 };
 const taco: CartLine = { itemId: 'taco', choice: 'Pollo', extraIds: ['papas'], quantity: 1, note: 'sin repollo' };
 
 describe('saveCart y loadCart', () => {
+  it('descarta líneas guardadas con cantidad 0, negativa o con decimales', () => {
+    const saved = [
+      { ...tipico, quantity: 0 },
+      { ...tipico, quantity: -2 },
+      { ...tipico, quantity: 1.5 },
+      { itemId: 'tipico', extraIds: [], quantity: 1 },
+    ];
+    expect(loadCart(memoryStore(JSON.stringify(saved)), FIXTURE_MENU)).toEqual([{ itemId: 'tipico', extraIds: [], quantity: 1 }]);
+  });
+
+  it('descarta una línea guardada con cantidad 0 aunque no haya otra igual', () => {
+    expect(loadCart(memoryStore(JSON.stringify([{ ...tipico, quantity: 0 }])), FIXTURE_MENU)).toEqual([]);
+  });
+
   it('guarda y recupera el carrito', () => {
     const store = memoryStore();
     saveCart(store, [tipico, taco]);

@@ -1,8 +1,13 @@
+// Guardar y leer el carrito en localStorage para que sobreviva a recargar la página.
+// Lo usa useCart. También lo reusa el idioma (LanguageContext) para abrir el almacenamiento.
+
 import type { MenuSection } from '../menu/types';
 import { mergeLines, resolveLine, type CartLine } from './cart';
 
+/** Clave del carrito en localStorage. No cambiarla: los carritos guardados se perderían. */
 export const CART_STORAGE_KEY = 'kairos.cart.v1';
 
+/** Lo mínimo de localStorage que se usa; en las pruebas se reemplaza por un objeto en memoria. */
 export interface KeyValueStore {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
@@ -12,6 +17,7 @@ function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === 'string';
 }
 
+/** Revisa un valor leído del almacenamiento: si no tiene la forma de una línea, da null. */
 function toLine(value: unknown): CartLine | null {
   if (typeof value !== 'object' || value === null) return null;
   const v = value as Record<string, unknown>;
@@ -32,6 +38,8 @@ function toLine(value: unknown): CartLine | null {
 /** Lee el carrito guardado. Ante cualquier problema devuelve solo las líneas que siguen siendo válidas. */
 export function loadCart(store: KeyValueStore | null, menu: MenuSection[]): CartLine[] {
   if (!store) return [];
+  // Cualquiera puede editar el localStorage, y en modo privado leerlo puede lanzar un error:
+  // se desconfía de todo lo que venga de ahí y ante un problema se empieza con el carrito vacío.
   let raw: string | null;
   try {
     raw = store.getItem(CART_STORAGE_KEY);
@@ -48,12 +56,16 @@ export function loadCart(store: KeyValueStore | null, menu: MenuSection[]): Cart
   }
   if (!Array.isArray(data)) return [];
 
-  const lines = data
-    .map(toLine)
-    .filter((line): line is CartLine => line !== null && resolveLine(menu, line) !== null);
+  // Se quedan solo las líneas con forma correcta y que todavía existen en el menú (ver resolveLine).
+  const lines: CartLine[] = [];
+  for (const value of data) {
+    const line = toLine(value);
+    if (line && resolveLine(menu, line)) lines.push(line);
+  }
   return mergeLines(lines);
 }
 
+/** Guarda el carrito. Si no se puede, no pasa nada: sigue en memoria mientras la página esté abierta. */
 export function saveCart(store: KeyValueStore | null, cart: CartLine[]): void {
   if (!store) return;
   try {

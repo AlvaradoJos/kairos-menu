@@ -4,11 +4,11 @@ import { EMPTY_FORM, hasErrors, validateOrderForm, type OrderForm } from '../val
 const valid: OrderForm = { ...EMPTY_FORM, name: 'Ana', type: 'recoger', payment: 'efectivo' };
 
 describe('validateOrderForm', () => {
-  it('marca nombre, tipo y pago en un formulario vacío', () => {
+  it('marca nombre, tipo y pago en un formulario vacío, con claves que la interfaz traduce', () => {
     expect(validateOrderForm(EMPTY_FORM)).toEqual({
-      name: 'Falta el nombre',
-      type: 'Falta el tipo de pedido',
-      payment: 'Falta el método de pago',
+      name: 'nameMissing',
+      type: 'typeMissing',
+      payment: 'paymentMissing',
     });
   });
 
@@ -17,7 +17,7 @@ describe('validateOrderForm', () => {
   });
 
   it('pide dirección si es express', () => {
-    expect(validateOrderForm({ ...valid, type: 'express' })).toEqual({ address: 'Falta la dirección' });
+    expect(validateOrderForm({ ...valid, type: 'express' })).toEqual({ address: 'addressMissing' });
   });
 
   it('acepta express con dirección', () => {
@@ -25,14 +25,14 @@ describe('validateOrderForm', () => {
   });
 
   it('trata como vacíos los campos de solo espacios', () => {
-    expect(validateOrderForm({ ...valid, name: '   ' })).toEqual({ name: 'Falta el nombre' });
-    expect(validateOrderForm({ ...valid, type: 'express', address: ' \n ' })).toEqual({ address: 'Falta la dirección' });
+    expect(validateOrderForm({ ...valid, name: '   ' })).toEqual({ name: 'nameMissing' });
+    expect(validateOrderForm({ ...valid, type: 'express', address: ' \n ' })).toEqual({ address: 'addressMissing' });
   });
 });
 
 describe('hasErrors', () => {
   it('detecta si hay algún error', () => {
     expect(hasErrors({})).toBe(false);
-    expect(hasErrors({ name: 'Falta el nombre' })).toBe(true);
+    expect(hasErrors({ name: 'nameMissing' })).toBe(true);
   });
 });

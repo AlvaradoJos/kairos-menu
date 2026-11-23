@@ -1,3 +1,6 @@
+// Menú pequeño de mentira para las pruebas de la lógica: un platillo simple, uno con opción y adicionales
+// y uno con tamaños. Así las pruebas no dependen de los precios reales de menu.json.
+
 import type { MenuSection } from '../features/menu/types';
 
 export const FIXTURE_MENU: MenuSection[] = [

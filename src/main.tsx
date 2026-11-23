@@ -1,6 +1,9 @@
+// Punto de entrada: carga las fuentes y los estilos y monta la app dentro de LanguageProvider.
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { LanguageProvider } from './i18n/LanguageContext';
 import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
@@ -11,6 +14,8 @@ import './styles/app.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
   </StrictMode>,
 );

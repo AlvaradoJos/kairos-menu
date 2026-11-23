@@ -60,6 +60,12 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      # Sin número válido el sitio saldría sin forma de pedir: mejor que falle aquí. Solo en "deploy":
+      # los pull requests no tienen la variable y "check" no la necesita.
+      - name: Check WhatsApp number
+        run: node scripts/check-whatsapp-number.mjs
+        env:
+          WHATSAPP_NUMBER: ${{ vars.WHATSAPP_NUMBER }}
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
@@ -68,6 +74,8 @@ jobs:
         env:
           # "/<repo>" en un sitio de proyecto, vacío con dominio propio.
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+          # Número que recibe los pedidos (variable del repo WHATSAPP_NUMBER). Sin ella: "Número pendiente".
+          VITE_WHATSAPP_NUMBER: ${{ vars.WHATSAPP_NUMBER }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:

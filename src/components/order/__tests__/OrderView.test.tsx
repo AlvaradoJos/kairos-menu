@@ -2,10 +2,10 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { MENU } from '../../data/menu';
-import { setNote, setQuantity, type CartLine } from '../../features/cart/cart';
-import { EMPTY_FORM, type OrderForm } from '../../features/order-form/validation';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MENU } from '../../../data/menu';
+import { setNote, setQuantity, type CartLine } from '../../../features/cart/cart';
+import { EMPTY_FORM, type OrderForm } from '../../../features/order-form/validation';
 import { OrderView } from '../OrderView';
 
 afterEach(() => {
@@ -42,6 +42,16 @@ function Harness({ whatsappNumber, deliveryFee, onClear = () => {}, onClose = ()
 }
 
 describe('OrderView', () => {
+  it('suma y resta unidades de una línea y recalcula el total', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    await user.click(screen.getByRole('button', { name: 'Sumar uno de Bacon & Chesse' }));
+    expect(screen.getAllByText('₡10.000').length).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', { name: 'Restar uno de Bacon & Chesse' }));
+    expect(screen.queryByText('₡10.000')).toBeNull();
+    expect(screen.getAllByText('₡5.000').length).toBeGreaterThan(0);
+  });
+
   it('muestra el platillo y el total', () => {
     render(<Harness whatsappNumber="50688887777" />);
     expect(screen.getByText('Bacon & Chesse')).toBeTruthy();
@@ -87,8 +97,8 @@ describe('OrderView', () => {
 
     expect(open).toHaveBeenCalledTimes(1);
     const url = open.mock.calls[0][0] as string;
-    expect(url.startsWith('https://wa.me/50688887777?text=')).toBe(true);
-    const text = decodeURIComponent(url.split('?text=')[1]);
+    expect(url.startsWith('https://api.whatsapp.com/send?phone=50688887777&text=')).toBe(true);
+    const text = new URL(url).searchParams.get('text') ?? '';
     expect(text).toContain('1× Bacon & Chesse (Pechuga de pollo) — ₡3.800');
     expect(text).toContain('Nombre: Ana');
     expect(text).toContain('Pago: Efectivo');
@@ -171,5 +181,124 @@ describe('OrderView', () => {
     await user.click(screen.getByRole('button', { name: 'Quitar Bacon & Chesse' }));
     expect(screen.getByText('Tu pedido está vacío.')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Enviar por WhatsApp' })).toBeNull();
+  });
+});
+
+describe('OrderView: ubicación para el express', () => {
+  function mockGeolocation(impl: Geolocation['getCurrentPosition']) {
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: { getCurrentPosition: impl } });
+  }
+
+  // jsdom no trae isSecureContext: se simula un sitio con HTTPS, como GitHub Pages.
+  beforeEach(() => {
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: true });
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: undefined });
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: undefined });
+  });
+
+  async function fillExpress(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByLabelText('Nombre'), 'Ana');
+    await user.click(screen.getByLabelText('Express'));
+    await user.type(screen.getByLabelText('Dirección'), 'Barrio X');
+    await user.click(screen.getByLabelText('Efectivo'));
+  }
+
+  it('el botón solo aparece en express', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    expect(screen.queryByRole('button', { name: /ubicación/i })).toBeNull();
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByRole('button', { name: 'Compartir mi ubicación' })).toBeTruthy();
+  });
+
+  it('adjunta el enlace del mapa al mensaje de WhatsApp', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((ok) => ok({ coords: { latitude: 9.9325427, longitude: -84.0795782 } } as GeolocationPosition));
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText('Ubicación lista')).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+
+    const text = new URL(open.mock.calls[0][0] as string).searchParams.get('text') ?? '';
+    expect(text).toContain('Ubicación (Google Maps): https://www.google.com/maps?q=9.932543,-84.079578');
+    expect(text).toContain('Waze: https://waze.com/ul?ll=9.932543,-84.079578&navigate=yes');
+  });
+
+  it('se puede quitar la ubicación antes de enviar', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((ok) => ok({ coords: { latitude: 9.93, longitude: -84.08 } } as GeolocationPosition));
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    await user.click(screen.getByRole('button', { name: 'Quitar ubicación' }));
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+
+    const text = new URL(open.mock.calls[0][0] as string).searchParams.get('text') ?? '';
+    expect(text).not.toContain('Ubicación');
+  });
+
+  it('si el cliente no da permiso, avisa y deja enviar sin ubicación', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((_ok, fail) =>
+      fail?.({ code: 1, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError),
+    );
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText(/No nos diste permiso/)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('si el GPS tarda demasiado, lo dice y deja intentar de nuevo', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((_ok, fail) =>
+      fail?.({ code: 3, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError),
+    );
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText(/tardó demasiado/)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Compartir mi ubicación' })).toBeTruthy();
+  });
+
+  it('en un sitio sin HTTPS lo dice con su propio aviso, sin invitar a reintentar', async () => {
+    const user = userEvent.setup();
+    const getCurrentPosition = vi.fn();
+    mockGeolocation(getCurrentPosition);
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: false });
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    const notice = screen.getByText(/no es segura \(sin https\)/);
+    expect(notice.textContent).not.toMatch(/Intenta de nuevo/);
+    expect(getCurrentPosition).not.toHaveBeenCalled();
+  });
+
+  it('sin costo de envío definido, la pista dice que el costo se da después', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByText('Te decimos el costo del envío al recibir el pedido.')).toBeTruthy();
+  });
+
+  it('con costo de envío definido, la pista no contradice la línea de envío', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" deliveryFee={1000} />);
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByText('₡1.000')).toBeTruthy();
+    expect(screen.queryByText(/Te decimos el costo del envío/)).toBeNull();
   });
 });
