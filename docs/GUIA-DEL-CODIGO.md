@@ -2,6 +2,8 @@
 
 Esta guía sirve para leer el código y explicarlo en la exposición. Sale del mapa que armó graphify sobre `src/` (`graphify-out/`, no se sube al repo). Las piezas con más conexiones son `OrderView`, `App`, `MenuSectionView`, `resolveLine` y `formatColones`, y no hay dependencias circulares. El mapa se hizo antes de dividir `OrderView` en `components/order/`.
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 **La idea en una frase:** `menu.json` → `MENU` → pantallas → carrito → mensaje → WhatsApp. La lógica (precios, validación, mensaje) vive en `src/features/` con pruebas; los componentes solo muestran y avisan cambios.
 
 ## El recorrido de un pedido, archivo por archivo

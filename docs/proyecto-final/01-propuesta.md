@@ -4,6 +4,8 @@ Proyecto de Ingeniería del Software II · Prof. Erick Chaves
 Peso: 10 % · Entrega: lunes 9 de noviembre de 2026
 Equipo: [PENDIENTE: nombre del equipo] · Versión del documento: 1 (2026-11-07)
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 > **Nota de transparencia.** Antes de empezar el curso ya existía una primera versión del sitio (spec y plan del 2026-10-22, ver `docs/superpowers/`). Este documento formaliza la propuesta y fija el alcance contra el que se evalúa; el alcance de la versión 1 coincide con lo que el código ya hace o con lo que se completa en las semanas 3 y 4.
 
 ---

@@ -2,6 +2,8 @@
 
 Proyecto de Ingeniería del Software II · Prof. Erick Chaves · Versión del documento: 1 (2026-11-18)
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 Duración total: [PENDIENTE: minutos que da el profesor]. Los tiempos de abajo son **proporciones** sobre un ejemplo de 15 minutos; se escalan cuando se conozca la duración real.
 
 Integrantes: **A** = [PENDIENTE], **B** = [PENDIENTE], **C** = [PENDIENTE]. Si son más o menos, se reparten los bloques; cada bloque lo presenta una sola persona y todos responden preguntas.

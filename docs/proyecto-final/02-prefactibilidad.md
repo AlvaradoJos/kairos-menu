@@ -4,6 +4,8 @@ Proyecto de Ingeniería del Software II · Prof. Erick Chaves
 Peso: 15 % · Entrega: [PENDIENTE: fecha]
 Equipo: [PENDIENTE: nombre del equipo] · Versión del documento: 1 (2026-11-07)
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 Este documento parte de la propuesta (`01-propuesta.md`). Los códigos A1…A12 son las funcionalidades del alcance de la versión 1 definido allí.
 
 ---

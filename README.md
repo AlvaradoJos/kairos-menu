@@ -2,6 +2,8 @@
 
 Página web donde los clientes de Kairos Foods ven el menú desde el celular, arman su pedido y lo envían ya escrito al WhatsApp del restaurante. Es un sitio estático: no tiene servidor, base de datos ni costos mensuales.
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 Trabajo de Horizon Software Solutions. Contexto del cliente: `CLAUDE.md`. Reglas para quien programe: `AGENTS.md`.
 
 ## Qué hace (Semana 3)
@@ -45,7 +47,7 @@ Ningún texto visible está escrito en un componente: todos salen de `src/i18n/`
 
 - Solo en pedidos **Express**, y solo si el cliente toca "Compartir mi ubicación". La dirección sigue siendo obligatoria.
 - El navegador pide permiso y el GPS responde en hasta 10 segundos. Si el cliente no da permiso, si tarda demasiado, si no encuentra la ubicación o si el navegador no tiene GPS, sale un aviso para cada caso y el pedido se envía igual con la dirección.
-- **Necesita HTTPS** (o `localhost` en desarrollo): los navegadores solo dan la ubicación en sitios seguros. GitHub Pages ya es HTTPS. Si abrís el sitio desde otro celular con `npm run dev -- --host` (`http://192.168…`), la ubicación va a decir "no disponible": es lo esperado.
+- **Necesita HTTPS** (o `localhost` en desarrollo): los navegadores solo dan la ubicación en sitios seguros. GitHub Pages ya es HTTPS. Si abrís el sitio desde otro celular con `npm run dev -- --host` (`http://192.168…`), la ubicación va a avisar que la página no es segura: es lo esperado.
 - La ubicación vive solo en el formulario y en el mensaje. No se guarda en `localStorage` ni se manda a ningún otro lado.
 
 ## Demo paso a paso (Semana 3)

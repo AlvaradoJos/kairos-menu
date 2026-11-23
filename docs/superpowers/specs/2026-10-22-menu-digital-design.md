@@ -3,6 +3,8 @@
 Fecha: 2026-10-22
 Estado: aprobado en conversación, pendiente de revisión escrita.
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 ## Objetivo
 
 Una página web, pensada primero para celular, donde los clientes de Kairos Food's ven el menú, arman su pedido y lo envían ya redactado al WhatsApp del restaurante. Llegan por un QR en el local o por un link compartido en Instagram o WhatsApp.

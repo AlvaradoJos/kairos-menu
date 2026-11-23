@@ -4,6 +4,8 @@ Proyecto de Ingeniería del Software II · Prof. Erick Chaves
 Peso: [PENDIENTE: peso] · Entrega: [PENDIENTE: fecha]
 Equipo: [PENDIENTE: nombre del equipo] · Versión del documento: 1 (2026-11-07)
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 Requisitos (RF/RNF) e historias de usuario (HU) de referencia: `02-prefactibilidad.md`.
 
 ---
@@ -138,7 +140,7 @@ Regla: los componentes no calculan precios ni arman el texto del pedido. Si una 
 | Módulo | Función | Qué hace |
 |---|---|---|
 | `menu/price` | `formatColones(monto)` | `3800` → `"₡3.800"`. |
-| | `displayPrice(item)` | Precio de la tarjeta; `"desde ₡X"` si tiene tamaños. |
+| | `startingPrice(item)` | Precio de la tarjeta: `{ amount, hasSizes }`. La tarjeta escribe "desde" / "from" con `t.menu.priceFrom` si tiene tamaños. |
 | | `hasOptions(item)` | Si el + abre la ventana de opciones. |
 | `cart/cart` | `resolveLine(menu, línea)` | Busca platillo, tamaño y adicionales; `null` si algo ya no existe. |
 | | `lineTotal(menu, línea)` | (precio base o tamaño + adicionales) × cantidad. |

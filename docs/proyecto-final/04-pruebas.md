@@ -4,6 +4,8 @@ Proyecto de Ingeniería del Software II · Prof. Erick Chaves
 Peso: [PENDIENTE: peso] · Entrega: [PENDIENTE: fecha]
 Equipo: [PENDIENTE: nombre del equipo] · Versión del documento: 2 (2026-11-18: se agrega la ubicación opcional, RF-16, y el defecto D-05)
 
+> Precios tomados de menu.json el 2026-11-22; si cambian, menu.json manda.
+
 Requisitos (RF/RNF) e historias (HU): `02-prefactibilidad.md`. Alcance (A1–A12): `01-propuesta.md`.
 
 ---
