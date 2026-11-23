@@ -3,7 +3,8 @@ import { mapsLink, wazeLink } from '../location/location';
 import type { Lang } from '../../i18n/language';
 import { formatColones } from '../menu/price';
 import type { Colones, MenuSection } from '../menu/types';
-import { deliveryFeeFor, orderTotal, orderWarnings } from '../order-form/totals';
+import { es } from '../../i18n/es';
+import { deliveryFeeFor, orderTotal, orderWarnings, warningText } from '../order-form/totals';
 import { ORDER_TYPE_LABEL, PAYMENT_LABEL, type OrderForm } from '../order-form/validation';
 
 // Sin emojis: al abrir el enlace de WhatsApp se ven como "�". Volver a probar en un celular real antes de reponerlos.
@@ -62,7 +63,7 @@ export function buildOrderMessage(
   if (customerLang === 'en') out.push('Idioma del cliente: inglés');
 
   const warnings = orderWarnings(menu, cart, form, deliveryFee);
-  if (warnings.length > 0) out.push('', ...warnings);
+  if (warnings.length > 0) out.push('', ...warnings.map((warning) => warningText(warning, es)));
 
   return out.join('\n');
 }

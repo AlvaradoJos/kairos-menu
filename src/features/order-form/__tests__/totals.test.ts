@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { FIXTURE_MENU } from '../../../test/fixtureMenu';
 import type { CartLine } from '../../cart/cart';
-import { deliveryFeeFor, orderTotal, orderWarnings } from '../totals';
+import { en } from '../../../i18n/en';
+import { es } from '../../../i18n/es';
+import { deliveryFeeFor, orderTotal, orderWarnings, warningText, type OrderWarning } from '../totals';
 import { EMPTY_FORM, type OrderForm } from '../validation';
 
 const cart: CartLine[] = [{ itemId: 'tipico', extraIds: [], quantity: 1 }];
@@ -34,16 +36,13 @@ describe('orderWarnings', () => {
   });
 
   it('avisa costo de envío por confirmar si es express sin costo definido', () => {
-    expect(orderWarnings(FIXTURE_MENU, cart, express, undefined)).toEqual(['Costo de envío por confirmar']);
+    expect(orderWarnings(FIXTURE_MENU, cart, express, undefined)).toEqual([{ kind: 'deliveryFeePending' }]);
     expect(orderWarnings(FIXTURE_MENU, cart, express, 1000)).toEqual([]);
   });
 
   it('avisa adicionales por confirmar con nota en desayuno', () => {
     const conNota: CartLine[] = [{ itemId: 'tipico', extraIds: [], quantity: 1, note: 'huevo extra' }];
-    expect(orderWarnings(FIXTURE_MENU, conNota, express, undefined)).toEqual([
-      'Adicionales por confirmar',
-      'Costo de envío por confirmar',
-    ]);
+    expect(orderWarnings(FIXTURE_MENU, conNota, express, undefined)).toEqual([{ kind: 'unpricedExtras' }, { kind: 'deliveryFeePending' }]);
   });
 });
 
@@ -55,8 +54,17 @@ describe('orderWarnings con precios por confirmar', () => {
       { itemId: 'papas-fritas', sizeId: 'grande', extraIds: [], quantity: 1 },
       { itemId: 'quesoburguesa', extraIds: [], quantity: 1 },
     ];
-    expect(orderWarnings(MENU, conPendiente, recoger, undefined)).toEqual([
-      'Precio por confirmar: La Rascacielos, Papas Fritas',
-    ]);
+    expect(orderWarnings(MENU, conPendiente, recoger, undefined)).toEqual([{ kind: 'pendingPrice', names: ['La Rascacielos', 'Papas Fritas'] }]);
+  });
+});
+
+describe('warningText', () => {
+  it('escribe cada aviso en el idioma del diccionario', () => {
+    const pending: OrderWarning = { kind: 'pendingPrice', names: ['La Rascacielos', 'Papas Fritas'] };
+    expect(warningText(pending, es)).toBe('Precio por confirmar: La Rascacielos, Papas Fritas');
+    expect(warningText(pending, en)).toBe('Price to be confirmed: La Rascacielos, Papas Fritas');
+    expect(warningText({ kind: 'unpricedExtras' }, es)).toBe('Adicionales por confirmar');
+    expect(warningText({ kind: 'deliveryFeePending' }, es)).toBe('Costo de envío por confirmar');
+    expect(warningText({ kind: 'deliveryFeePending' }, en)).toBe('Delivery fee to be confirmed');
   });
 });

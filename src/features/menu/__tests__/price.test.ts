@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { displayPrice, formatColones, hasOptions } from '../price';
+import { formatColones, hasOptions, startingPrice } from '../price';
 import type { MenuItem } from '../types';
 
 describe('formatColones', () => {
@@ -11,12 +11,12 @@ describe('formatColones', () => {
   });
 });
 
-describe('displayPrice', () => {
-  it('muestra el precio fijo', () => {
-    expect(displayPrice({ id: 'a', name: 'A', price: 1700 })).toBe('₡1.700');
+describe('startingPrice', () => {
+  it('da el precio fijo', () => {
+    expect(startingPrice({ id: 'a', name: 'A', price: 1700 })).toEqual({ amount: 1700, hasSizes: false });
   });
 
-  it('muestra "desde" el tamaño más barato', () => {
+  it('con tamaños, da el más barato para mostrarlo como "desde"', () => {
     const item: MenuItem = {
       id: 'b',
       name: 'B',
@@ -25,7 +25,7 @@ describe('displayPrice', () => {
         { id: 'regular', label: 'Regular', price: 2000 },
       ],
     };
-    expect(displayPrice(item)).toBe('desde ₡2.000');
+    expect(startingPrice(item)).toEqual({ amount: 2000, hasSizes: true });
   });
 });
 

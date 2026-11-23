@@ -8,7 +8,7 @@ import {
 import { lineTotal, resolveLine, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { Colones, MenuSection } from '../features/menu/types';
-import { deliveryFeeFor, orderTotal, orderWarnings } from '../features/order-form/totals';
+import { deliveryFeeFor, orderTotal, orderWarnings, warningText } from '../features/order-form/totals';
 import {
   hasErrors,
   ORDER_TYPE_LABEL,
@@ -20,6 +20,8 @@ import {
   type PaymentMethod,
 } from '../features/order-form/validation';
 import { buildOrderMessage, buildWhatsAppUrl } from '../features/whatsapp/message';
+import { useLanguage } from '../i18n/LanguageContext';
+import { choiceOption, extraLabel, sizeLabel } from '../i18n/menuText';
 import { Icon } from './Icon';
 import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
@@ -42,6 +44,7 @@ const PAYMENTS = Object.keys(PAYMENT_LABEL) as PaymentMethod[];
 
 export function OrderView(props: Props) {
   const { menu, lines, form, onFormChange, whatsappNumber, deliveryFee } = props;
+  const { lang, t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [askSent, setAskSent] = useState(false);
   const [focusErrors, setFocusErrors] = useState(0);
@@ -78,26 +81,26 @@ export function OrderView(props: Props) {
       return;
     }
     if (!whatsappNumber || lines.length === 0) return;
-    const message = buildOrderMessage(menu, lines, form, deliveryFee);
+    const message = buildOrderMessage(menu, lines, form, deliveryFee, lang);
     window.open(buildWhatsAppUrl(whatsappNumber, message), '_blank', 'noopener');
     setAskSent(true);
   }
 
   return (
-    <div className="order" ref={orderRef} role="dialog" aria-modal="true" aria-label="Tu pedido">
+    <div className="order" ref={orderRef} role="dialog" aria-modal="true" aria-label={t.order.title}>
       <div className="order__inner">
         <div className="order__header">
-          <h2 className="order__title">Tu pedido</h2>
-          <button type="button" className="sheet__close" onClick={props.onClose} aria-label="Cerrar">
+          <h2 className="order__title">{t.order.title}</h2>
+          <button type="button" className="sheet__close" onClick={props.onClose} aria-label={t.order.close}>
             <Icon name="close" />
           </button>
         </div>
 
         {lines.length === 0 ? (
           <div className="empty">
-            <p>Tu pedido está vacío.</p>
+            <p>{t.order.empty}</p>
             <button type="button" className="btn btn--outline" onClick={props.onClose}>
-              Ver menú
+              {t.order.viewMenu}
             </button>
           </div>
         ) : (
@@ -115,21 +118,21 @@ export function OrderView(props: Props) {
 
             {fee !== undefined && (
               <div className="order__row">
-                <span>Envío</span>
+                <span>{t.order.delivery}</span>
                 <span>{formatColones(fee)}</span>
               </div>
             )}
             <div className="order__total">
-              <span>Total</span>
+              <span>{t.order.total}</span>
               <span>{formatColones(orderTotal(menu, lines, form, deliveryFee))}</span>
             </div>
-            {warnings.map((w) => (
-              <p key={w} className="order__warning">
-                {w}
+            {warnings.map((warning) => (
+              <p key={warning.kind} className="order__warning">
+                {warningText(warning, t)}
               </p>
             ))}
 
-            <Field label="Nombre" error={errors.name}>
+            <Field label={t.order.name} error={errors.name && t.errors[errors.name]}>
               {(id, describedBy) => (
                 <input
                   id={id}
@@ -148,7 +151,7 @@ export function OrderView(props: Props) {
               aria-invalid={Boolean(errors.type)}
               aria-describedby={errors.type ? typeErrorId : undefined}
             >
-              <legend>Tipo de pedido</legend>
+              <legend>{t.order.orderType}</legend>
               <div className="choice-row">
                 {ORDER_TYPES.map((type) => (
                   <label key={type} className="option">
@@ -158,20 +161,20 @@ export function OrderView(props: Props) {
                       checked={form.type === type}
                       onChange={() => update('type', type)}
                     />
-                    <span className="option__label">{ORDER_TYPE_LABEL[type]}</span>
+                    <span className="option__label">{t.order.types[type]}</span>
                   </label>
                 ))}
               </div>
               {errors.type && (
                 <p className="field__error" id={typeErrorId}>
-                  {errors.type}
+                  {t.errors[errors.type]}
                 </p>
               )}
             </fieldset>
 
             {form.type === 'express' && (
               <>
-                <Field label="Dirección" error={errors.address}>
+                <Field label={t.order.address} error={errors.address && t.errors[errors.address]}>
                   {(id, describedBy) => (
                     <textarea
                       id={id}
@@ -185,12 +188,12 @@ export function OrderView(props: Props) {
                   )}
                 </Field>
                 <LocationField value={form.location} onChange={(location) => update('location', location)} />
-                <Field label="Referencia (opcional)">
+                <Field label={t.order.reference}>
                   {(id) => (
                     <input
                       id={id}
                       type="text"
-                      placeholder="Ej.: portón negro"
+                      placeholder={t.order.referencePlaceholder}
                       value={form.reference}
                       onChange={(e) => update('reference', e.target.value)}
                     />
@@ -200,7 +203,7 @@ export function OrderView(props: Props) {
             )}
 
             {form.type === 'recoger' && (
-              <Field label="Hora a la que pasas (opcional)">
+              <Field label={t.order.pickupTime}>
                 {(id) => (
                   <input id={id} type="time" value={form.pickupTime} onChange={(e) => update('pickupTime', e.target.value)} />
                 )}
@@ -212,7 +215,7 @@ export function OrderView(props: Props) {
               aria-invalid={Boolean(errors.payment)}
               aria-describedby={errors.payment ? paymentErrorId : undefined}
             >
-              <legend>Método de pago</legend>
+              <legend>{t.order.payment}</legend>
               <div className="choice-row">
                 {PAYMENTS.map((payment) => (
                   <label key={payment} className="option">
@@ -222,25 +225,25 @@ export function OrderView(props: Props) {
                       checked={form.payment === payment}
                       onChange={() => update('payment', payment)}
                     />
-                    <span className="option__label">{PAYMENT_LABEL[payment]}</span>
+                    <span className="option__label">{t.order.payments[payment]}</span>
                   </label>
                 ))}
               </div>
               {errors.payment && (
                 <p className="field__error" id={paymentErrorId}>
-                  {errors.payment}
+                  {t.errors[errors.payment]}
                 </p>
               )}
             </fieldset>
 
-            <Field label="Comentario (opcional)">
+            <Field label={t.order.comment}>
               {(id) => (
                 <textarea id={id} rows={2} value={form.comment} onChange={(e) => update('comment', e.target.value)} />
               )}
             </Field>
 
             <div role="alert">
-              {hasErrors(errors) && <p className="field__error">Faltan datos. Revisa lo marcado en rojo.</p>}
+              {hasErrors(errors) && <p className="field__error">{t.order.missingData}</p>}
             </div>
 
             <button
@@ -249,7 +252,7 @@ export function OrderView(props: Props) {
               disabled={!whatsappNumber}
               onClick={handleSend}
             >
-              {whatsappNumber ? 'Enviar por WhatsApp' : 'Número pendiente'}
+              {whatsappNumber ? t.order.send : t.order.numberPending}
             </button>
           </>
         )}
@@ -277,18 +280,19 @@ function SentDialog({ onConfirm, onBack }: SentDialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLButtonElement>(null);
   useDialogFocus(dialogRef, onBack, backRef);
+  const { t } = useLanguage();
 
   return (
     <div className="backdrop backdrop--center">
       <div className="dialog" ref={dialogRef} role="alertdialog" aria-modal="true" aria-labelledby="sent-title">
-        <h3 id="sent-title">¿Ya enviaste tu pedido?</h3>
-        <p className="item-card__description">Si WhatsApp no se abrió, vuelve al pedido e inténtalo de nuevo.</p>
+        <h3 id="sent-title">{t.sent.title}</h3>
+        <p className="item-card__description">{t.sent.body}</p>
         <div className="dialog__actions">
           <button type="button" className="btn btn--primary" onClick={onConfirm}>
-            Sí, vaciar carrito
+            {t.sent.confirm}
           </button>
           <button type="button" className="btn btn--outline" ref={backRef} onClick={onBack}>
-            No, volver al pedido
+            {t.sent.back}
           </button>
         </div>
       </div>
@@ -305,9 +309,15 @@ interface OrderLineProps {
 
 function OrderLine({ menu, line, onSetQuantity, onSetNote }: OrderLineProps) {
   const noteId = useId();
+  const { lang, t } = useLanguage();
   const resolved = resolveLine(menu, line);
   if (!resolved) return null;
-  const details = [resolved.size?.label, line.choice, ...resolved.extras.map((e) => `+ ${e.label}`)].filter(Boolean);
+
+  // Detalles en el idioma de la página: tamaño, opción y adicionales.
+  const details: string[] = [];
+  if (resolved.size) details.push(sizeLabel(resolved.size, lang));
+  if (line.choice && resolved.item.choice) details.push(choiceOption(resolved.item.choice, line.choice, lang));
+  for (const extra of resolved.extras) details.push(`+ ${extraLabel(extra, lang)}`);
   const name = resolved.item.name;
 
   return (
@@ -319,21 +329,21 @@ function OrderLine({ menu, line, onSetQuantity, onSetNote }: OrderLineProps) {
       {details.length > 0 && <p className="order-line__details">{details.join(' · ')}</p>}
       <div className="order-line__actions">
         <div className="qty">
-          <button type="button" aria-label={`Restar uno de ${name}`} onClick={() => onSetQuantity(line.quantity - 1)}>
+          <button type="button" aria-label={t.line.minusOne(name)} onClick={() => onSetQuantity(line.quantity - 1)}>
             <Icon name="minus" />
           </button>
           <span aria-live="polite">{line.quantity}</span>
-          <button type="button" aria-label={`Sumar uno de ${name}`} onClick={() => onSetQuantity(line.quantity + 1)}>
+          <button type="button" aria-label={t.line.plusOne(name)} onClick={() => onSetQuantity(line.quantity + 1)}>
             <Icon name="plus" />
           </button>
         </div>
-        <button type="button" className="link-btn" aria-label={`Quitar ${name}`} onClick={() => onSetQuantity(0)}>
-          Quitar
+        <button type="button" className="link-btn" aria-label={t.line.removeLabel(name)} onClick={() => onSetQuantity(0)}>
+          {t.line.remove}
         </button>
       </div>
       <div className="field">
         <label className="field__label" htmlFor={noteId}>
-          {resolved.section.hasUnpricedExtras ? 'Nota (adicionales: te confirmamos el precio)' : 'Nota'}
+          {resolved.section.hasUnpricedExtras ? t.line.noteUnpricedExtras : t.line.note}
         </label>
         <textarea id={noteId} rows={1} value={line.note ?? ''} onChange={(e) => onSetNote(e.target.value)} />
       </div>
@@ -346,17 +356,11 @@ interface LocationFieldProps {
   onChange(location: GeoPoint | null): void;
 }
 
-const LOCATION_ERROR_TEXT: Record<LocationError, string> = {
-  denied: 'No nos diste permiso para ver tu ubicación. Puedes activarlo en el navegador o solo escribir la dirección.',
-  timeout: 'Tu ubicación tardó demasiado. Intenta de nuevo o escribe bien la dirección.',
-  unavailable: 'No pudimos encontrar tu ubicación. Intenta de nuevo o escribe bien la dirección.',
-  unsupported: 'Tu navegador no permite compartir la ubicación. Escribe la dirección con buenas señas.',
-};
-
 /** Botón opcional para mandar el punto exacto. Jose lo usa para calcular el envío; la dirección sigue siendo obligatoria. */
 function LocationField({ value, onChange }: LocationFieldProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<LocationError | null>(null);
+  const { t } = useLanguage();
 
   async function share() {
     setLoading(true);
@@ -372,28 +376,28 @@ function LocationField({ value, onChange }: LocationFieldProps) {
 
   return (
     <div className="field location">
-      <span className="field__label">Ubicación (opcional)</span>
+      <span className="field__label">{t.location.label}</span>
       {value ? (
         <div className="location__ready">
           <span className="location__status">
             <Icon name="pin" />
-            Ubicación lista
+            {t.location.ready}
           </span>
           <a href={mapsLink(value)} target="_blank" rel="noopener noreferrer" className="link-btn">
-            Ver en el mapa
+            {t.location.viewMap}
           </a>
           <button type="button" className="link-btn" onClick={() => onChange(null)}>
-            Quitar ubicación
+            {t.location.remove}
           </button>
         </div>
       ) : (
         <button type="button" className="btn btn--outline btn--block" onClick={share} disabled={loading}>
           <Icon name="pin" />
-          {loading ? 'Buscando tu ubicación…' : 'Compartir mi ubicación'}
+          {loading ? t.location.searching : t.location.share}
         </button>
       )}
       <p className="field__hint" aria-live="polite">
-        {error ? LOCATION_ERROR_TEXT[error] : 'Te decimos el costo del envío al recibir el pedido.'}
+        {error ? t.location.errors[error] : t.location.hint}
       </p>
     </div>
   );

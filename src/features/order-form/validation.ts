@@ -27,25 +27,31 @@ export const EMPTY_FORM: OrderForm = {
   comment: '',
 };
 
+/** Textos del mensaje de WhatsApp, siempre en español. La página usa t.order.types. */
 export const ORDER_TYPE_LABEL: Record<OrderType, string> = {
   recoger: 'Para recoger',
   express: 'Express',
 };
 
+/** Textos del mensaje de WhatsApp, siempre en español. La página usa t.order.payments. */
 export const PAYMENT_LABEL: Record<PaymentMethod, string> = {
   efectivo: 'Efectivo',
   sinpe: 'SINPE Móvil',
   tarjeta: 'Tarjeta',
 };
 
-export type FormErrors = Partial<Record<'name' | 'type' | 'address' | 'payment', string>>;
+/** Claves de error; la interfaz las traduce con t.errors (es.ts / en.ts). */
+export type FormErrorKey = 'nameMissing' | 'typeMissing' | 'addressMissing' | 'paymentMissing';
 
+export type FormErrors = Partial<Record<'name' | 'type' | 'address' | 'payment', FormErrorKey>>;
+
+/** Revisa los datos obligatorios. En express la dirección es obligatoria aunque se comparta la ubicación. */
 export function validateOrderForm(form: OrderForm): FormErrors {
   const errors: FormErrors = {};
-  if (!form.name.trim()) errors.name = 'Falta el nombre';
-  if (!form.type) errors.type = 'Falta el tipo de pedido';
-  if (form.type === 'express' && !form.address.trim()) errors.address = 'Falta la dirección';
-  if (!form.payment) errors.payment = 'Falta el método de pago';
+  if (!form.name.trim()) errors.name = 'nameMissing';
+  if (!form.type) errors.type = 'typeMissing';
+  if (form.type === 'express' && !form.address.trim()) errors.address = 'addressMissing';
+  if (!form.payment) errors.payment = 'paymentMissing';
   return errors;
 }
 

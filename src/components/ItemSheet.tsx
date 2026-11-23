@@ -1,7 +1,12 @@
+// Ventana para escoger tamaño, opción, adicionales, notas y cantidad antes de agregar un platillo.
+// La abre App al tocar "+" en un platillo con opciones. El total lo calcula lineTotal (carrito).
+
 import { useId, useRef, useState } from 'react';
 import { lineTotal, type CartLine } from '../features/cart/cart';
 import { formatColones } from '../features/menu/price';
 import type { MenuItem, MenuSection } from '../features/menu/types';
+import { useLanguage } from '../i18n/LanguageContext';
+import { choiceLabel, choiceOption, extraLabel, itemDescription, sizeLabel } from '../i18n/menuText';
 import { Icon } from './Icon';
 import { useDialogFocus } from './useDialogFocus';
 import { useLockBodyScroll } from './useLockBodyScroll';
@@ -13,7 +18,11 @@ interface Props {
   onClose(): void;
 }
 
+/** Hoja que sube desde abajo con las opciones del platillo. Escape o tocar afuera la cierran. */
 export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
+  const { lang, t } = useLanguage();
+  const description = itemDescription(item, lang);
+  const itemChoice = item.choice;
   const titleId = useId();
   const noteId = useId();
   const [sizeId, setSizeId] = useState(item.sizes?.[0]?.id);
@@ -47,17 +56,17 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
             <h2 className="sheet__title" id={titleId}>
               {item.name}
             </h2>
-            {item.description && <p className="item-card__description">{item.description}</p>}
-            {item.pending && <p className="price-pending price-pending--block">Precio por confirmar con el restaurante</p>}
+            {description && <p className="item-card__description">{description}</p>}
+            {item.pending && <p className="price-pending price-pending--block">{t.sheet.pricePending}</p>}
           </div>
-          <button type="button" className="sheet__close" onClick={onClose} aria-label="Cerrar">
+          <button type="button" className="sheet__close" onClick={onClose} aria-label={t.sheet.close}>
             <Icon name="close" />
           </button>
         </div>
 
         {item.sizes && (
           <fieldset className="option-group">
-            <legend>Tamaño</legend>
+            <legend>{t.sheet.size}</legend>
             {item.sizes.map((size) => (
               <label key={size.id} className="option">
                 <input
@@ -66,20 +75,21 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
                   checked={sizeId === size.id}
                   onChange={() => setSizeId(size.id)}
                 />
-                <span className="option__label">{size.label}</span>
+                <span className="option__label">{sizeLabel(size, lang)}</span>
                 <span className="option__price">{formatColones(size.price)}</span>
               </label>
             ))}
           </fieldset>
         )}
 
-        {item.choice && (
+        {itemChoice && (
           <fieldset className="option-group">
-            <legend>{item.choice.label}</legend>
-            {item.choice.options.map((option) => (
+            <legend>{choiceLabel(itemChoice, lang)}</legend>
+            {/* Se guarda la opción en español (va así en el mensaje); solo se muestra traducida. */}
+            {itemChoice.options.map((option) => (
               <label key={option} className="option">
                 <input type="radio" name="choice" checked={choice === option} onChange={() => setChoice(option)} />
-                <span className="option__label">{option}</span>
+                <span className="option__label">{choiceOption(itemChoice, option, lang)}</span>
               </label>
             ))}
           </fieldset>
@@ -87,11 +97,11 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
 
         {item.extras && item.extras.length > 0 && (
           <fieldset className="option-group">
-            <legend>Adicionales</legend>
+            <legend>{t.sheet.extras}</legend>
             {item.extras.map((extra) => (
               <label key={extra.id} className="option">
                 <input type="checkbox" checked={extraIds.includes(extra.id)} onChange={() => toggleExtra(extra.id)} />
-                <span className="option__label">{extra.label}</span>
+                <span className="option__label">{extraLabel(extra, lang)}</span>
                 <span className="option__price">+{formatColones(extra.price)}</span>
               </label>
             ))}
@@ -100,12 +110,12 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
 
         <div className="field">
           <label className="field__label" htmlFor={noteId}>
-            Notas
+            {t.sheet.notes}
           </label>
           <textarea
             id={noteId}
             rows={2}
-            placeholder="Ej.: sin cebolla"
+            placeholder={t.sheet.notesPlaceholder}
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
@@ -115,19 +125,19 @@ export function ItemSheet({ menu, item, onAdd, onClose }: Props) {
           <div className="qty">
             <button
               type="button"
-              aria-label="Restar uno"
+              aria-label={t.sheet.minusOne}
               disabled={quantity <= 1}
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               <Icon name="minus" />
             </button>
             <span aria-live="polite">{quantity}</span>
-            <button type="button" aria-label="Sumar uno" onClick={() => setQuantity((q) => q + 1)}>
+            <button type="button" aria-label={t.sheet.plusOne} onClick={() => setQuantity((q) => q + 1)}>
               <Icon name="plus" />
             </button>
           </div>
           <button type="button" className="btn btn--primary" onClick={() => onAdd(line)}>
-            Agregar · {formatColones(total)}
+            {t.sheet.add(formatColones(total))}
           </button>
         </div>
       </div>

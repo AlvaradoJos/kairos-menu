@@ -81,8 +81,8 @@ describe('MENU', () => {
     const byId = new Map(allItems.map((i) => [i.id, i]));
     expect(byId.get('la-rascacielos')?.price).toBe(3800);
     expect(byId.get('papas-fritas')?.sizes).toEqual([
-      { id: 'regular', label: 'Regulares', price: 1000 },
-      { id: 'grande', label: 'Grandes', price: 2700 },
+      { id: 'regular', label: 'Regulares', labelEn: 'Regular', price: 1000 },
+      { id: 'grande', label: 'Grandes', labelEn: 'Large', price: 2700 },
     ]);
     expect(byId.get('alitas')?.sizes?.map((s) => s.price)).toEqual([3500, 6700, 9900]);
     expect(byId.get('bacon-cheese')?.choice?.options).toEqual(['Carne', 'Pechuga de pollo']);
@@ -112,6 +112,43 @@ describe('MENU', () => {
       '¡Agrégale adicionales desde los 500 colones! Pídelos en las notas de tu pedido y te confirmamos el precio.',
     );
     expect(noteOf('almuerzos')).toBeUndefined();
+  });
+
+  it('los campos en inglés, si existen, no están vacíos', () => {
+    const englishTexts: (string | undefined)[] = [];
+    for (const section of MENU) {
+      englishTexts.push(section.titleEn, section.noteEn);
+      for (const item of section.items) {
+        englishTexts.push(item.descriptionEn, item.choice?.labelEn, ...(item.choice?.optionsEn ?? []));
+        for (const size of item.sizes ?? []) englishTexts.push(size.labelEn);
+        for (const extra of item.extras ?? []) englishTexts.push(extra.labelEn);
+      }
+    }
+    for (const text of englishTexts.filter((t) => t !== undefined)) expect(text.trim()).not.toBe('');
+    for (const category of source.categorias as Record<string, unknown>[]) {
+      for (const key of ['nombre_en', 'nota_en'] as const) {
+        if (key in category) expect(String(category[key]).trim(), `${category.id}.${key}`).not.toBe('');
+      }
+    }
+  });
+
+  it('las opciones en inglés corresponden una a una con las del español', () => {
+    for (const item of allItems) {
+      if (item.choice?.optionsEn) expect(item.choice.optionsEn.length, item.id).toBe(item.choice.options.length);
+    }
+  });
+
+  it('trae el inglés de categorías, notas y descripciones, sin traducir los nombres de los platillos', () => {
+    const tacos = MENU.find((s) => s.id === 'tacos')!;
+    expect(tacos.titleEn).toBe('Tacos');
+    expect(tacos.noteEn).toBe('Add fries or onion rings for an extra ₡1.200.');
+    expect(MENU.find((s) => s.id === 'desayunos')?.noteEn).toBe(
+      "Add extras from 500 colones! Ask for them in your order notes and we'll confirm the price.",
+    );
+    const tipico = allItems.find((i) => i.id === 'tipico')!;
+    expect(tipico.name).toBe('Típico');
+    expect(tipico.descriptionEn).toBe('Gallo pinto, egg, sweet plantain, bread and coffee');
+    expect(allItems.find((i) => i.id === 'alitas')?.sizes?.[0].labelEn).toBe('6 pieces');
   });
 
   it('solo Desayunos marca adicionales sin precio', () => {
