@@ -56,6 +56,11 @@ describe('requestLocation', () => {
     await expect(requestLocation(undefined, true)).rejects.toBe('unsupported');
   });
 
+  it('si el navegador no dice si el sitio es seguro, deja que el GPS decida', async () => {
+    const { geo } = fakeGeo({ coords: { latitude: 9.93, longitude: -84.08 } });
+    await expect(requestLocation(geo, undefined)).resolves.toEqual({ lat: 9.93, lng: -84.08 });
+  });
+
   it('en un sitio sin HTTPS la marca como no disponible, sin preguntar al GPS', async () => {
     const { geo, calls } = fakeGeo({ coords: { latitude: 9.93, longitude: -84.08 } });
     await expect(requestLocation(geo, false)).rejects.toBe('unavailable');

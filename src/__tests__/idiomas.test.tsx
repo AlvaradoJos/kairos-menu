@@ -63,6 +63,12 @@ describe('Idiomas', { timeout: 20_000 }, () => {
     expect(screen.getByRole('heading', { name: 'Breakfast' })).toBeTruthy();
   });
 
+  it('el idioma del navegador no se guarda como si el cliente lo hubiera elegido', async () => {
+    vi.spyOn(navigator, 'language', 'get').mockReturnValue('en-US');
+    await renderApp();
+    expect(localStorage.getItem(LANG_STORAGE_KEY)).toBeNull();
+  });
+
   it('recuerda el idioma al recargar la página', async () => {
     const user = userEvent.setup();
     const first = await renderApp();

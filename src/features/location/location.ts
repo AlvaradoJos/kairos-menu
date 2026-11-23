@@ -43,14 +43,16 @@ function toLocationError(error: GeolocationPositionError): LocationError {
  */
 export function requestLocation(
   geo: Geolocation | undefined = typeof navigator === 'undefined' ? undefined : navigator.geolocation,
-  secure: boolean = typeof window === 'undefined' ? false : window.isSecureContext,
+  secure: boolean | undefined = typeof window === 'undefined' ? undefined : window.isSecureContext,
 ): Promise<GeoPoint> {
   return new Promise((resolve, reject) => {
     if (!geo) {
       reject('unsupported' satisfies LocationError);
       return;
     }
-    if (!secure) {
+    // Solo se corta si el navegador dice claramente que el sitio no es seguro. Si no lo dice
+    // (undefined, navegadores viejos), se pregunta al GPS y el navegador decide.
+    if (secure === false) {
       reject('unavailable' satisfies LocationError);
       return;
     }

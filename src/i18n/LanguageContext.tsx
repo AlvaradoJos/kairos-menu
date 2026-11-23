@@ -27,14 +27,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    saveLanguage(store, lang);
     // El lector de pantalla usa <html lang> para pronunciar bien el texto.
     document.documentElement.lang = lang;
     document.title = DICTIONARIES[lang].meta.title;
-  }, [store, lang]);
+  }, [lang]);
+
+  // Se guarda solo cuando el cliente elige con el botón. El idioma que vino del navegador no se guarda:
+  // si después cambia el idioma del celular, la página lo sigue.
+  function chooseLanguage(next: Lang) {
+    saveLanguage(store, next);
+    setLang(next);
+  }
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t: DICTIONARIES[lang] }}>{children}</LanguageContext.Provider>
+    <LanguageContext.Provider value={{ lang, setLang: chooseLanguage, t: DICTIONARIES[lang] }}>
+      {children}
+    </LanguageContext.Provider>
   );
 }
 
