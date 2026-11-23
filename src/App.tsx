@@ -7,7 +7,7 @@ import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { ItemSheet } from './components/ItemSheet';
 import { MenuSectionView } from './components/MenuSectionView';
-import { OrderView } from './components/OrderView';
+import { OrderView } from './components/order/OrderView';
 import { SectionNav } from './components/SectionNav';
 import { config } from './config';
 import { MENU } from './data/menu';

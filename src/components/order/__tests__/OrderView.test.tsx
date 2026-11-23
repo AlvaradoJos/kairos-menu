@@ -3,9 +3,9 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MENU } from '../../data/menu';
-import { setNote, setQuantity, type CartLine } from '../../features/cart/cart';
-import { EMPTY_FORM, type OrderForm } from '../../features/order-form/validation';
+import { MENU } from '../../../data/menu';
+import { setNote, setQuantity, type CartLine } from '../../../features/cart/cart';
+import { EMPTY_FORM, type OrderForm } from '../../../features/order-form/validation';
 import { OrderView } from '../OrderView';
 
 afterEach(() => {
