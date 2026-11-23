@@ -18,7 +18,7 @@ Una página web, pensada primero para celular, donde los clientes de Kairos Food
 | Tipos de pedido | Para recoger y express. |
 | Variantes | Tamaños con precio propio, elección carne/pollo, adicionales con precio fijo y notas libres. |
 | Stack | Vite + React + TypeScript, sitio estático. Pruebas con Vitest. |
-| Hosting | Gratuito, en Netlify o Cloudflare Pages. Se decide al publicar. |
+| Hosting | GitHub Pages, publicado con GitHub Actions (ADR 0004). |
 | Idiomas | Español e inglés, con diccionario propio (`src/i18n/`) y botón ES \| EN. El mensaje al negocio va siempre en español (ADR 0007). |
 
 ## Fuera de alcance (v1)
@@ -130,7 +130,7 @@ Una sola página, primero para celular y adaptable a escritorio.
 2. **Mensaje** (`features/whatsapp`):
 
 ```
-¡Hola Kairos Food's! Quiero hacer un pedido 🍔
+¡Hola Kairos Food's! Quiero hacer un pedido
 
 1× Bacon & Cheese (Pechuga de pollo) — ₡3800
    + Papas fritas — ₡1200
@@ -146,14 +146,15 @@ Dirección: Barrio X, 200 m sur de la iglesia
 Pago: SINPE Móvil
 Comentario: tocar el timbre
 
-⚠️ Costo de envío por confirmar
+Costo de envío por confirmar
 ```
 
    - El precio junto al platillo es (precio base o del tamaño) × cantidad. Cada adicional va en su propia línea con (precio del adicional) × cantidad. El total es la suma de todo, igual a `cartTotal`.
-   - Si `needsPriceConfirmation`, se agrega "⚠️ Adicionales por confirmar".
-   - Si es express y `config.deliveryFee` no está definido, se agrega "⚠️ Costo de envío por confirmar". Si está definido, aparece como línea "Envío" y se suma al total.
+   - Si `needsPriceConfirmation`, se agrega "Adicionales por confirmar".
+   - Si es express y `config.deliveryFee` no está definido, se agrega "Costo de envío por confirmar". Si está definido, aparece como línea "Envío" y se suma al total.
    - Si el cliente compartió su ubicación y el pedido es express, van las líneas `Ubicación (Google Maps):` y `Waze:` con enlaces de 6 decimales, debajo de la dirección y la referencia. En los pedidos para recoger no se incluyen (ADR 0008).
    - Si el cliente usó la página en inglés, se agrega la línea `Idioma del cliente: inglés`. El resto del mensaje sigue en español (ADR 0007).
+   - El mensaje va sin emojis (ADR 0003): los avisos son líneas de texto al final.
    - Las líneas de datos vacías (comentario, hora, ubicación) no se incluyen.
 3. **Envío.** Se abre `https://api.whatsapp.com/send?phone=<número>&text=<mensaje codificado con encodeURIComponent>` en una pestaña nueva. Hasta el 2026-11-07 era `wa.me`, que dañaba los emojis (defecto D-01).
 4. **Después del envío.** Al volver a la página se pregunta "¿Ya enviaste tu pedido?", con las opciones **"Sí, vaciar carrito"** y **"No, volver al pedido"**. El carrito nunca se vacía solo.
