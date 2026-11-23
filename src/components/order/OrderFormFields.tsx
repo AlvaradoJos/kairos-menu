@@ -1,6 +1,7 @@
 // Campos del formulario del pedido: nombre, tipo, dirección, ubicación, referencia, hora, pago y comentario.
 // Lo usa OrderView, que guarda el formulario y valida. Aquí solo se dibujan los campos y se avisan los cambios.
 
+import type { Colones } from '../../features/menu/types';
 import {
   ORDER_TYPE_LABEL,
   PAYMENT_LABEL,
@@ -23,13 +24,15 @@ interface Props {
   errors: FormErrors;
   /** Cambia solo los campos indicados, p. ej. onChange({ name: 'Ana' }). */
   onChange(changes: Partial<OrderForm>): void;
+  /** Costo del envío express, si ya se sabe (config.ts). */
+  deliveryFee?: Colones;
 }
 
 /**
  * Formulario del pedido. La dirección, la ubicación y la referencia salen solo en express;
  * la hora, solo para recoger.
  */
-export function OrderFormFields({ form, errors, onChange }: Props) {
+export function OrderFormFields({ form, errors, onChange, deliveryFee }: Props) {
   const { t } = useLanguage();
   return (
     <>
@@ -74,7 +77,11 @@ export function OrderFormFields({ form, errors, onChange }: Props) {
               />
             )}
           </Field>
-          <LocationField value={form.location} onChange={(location) => onChange({ location })} />
+          <LocationField
+            value={form.location}
+            onChange={(location) => onChange({ location })}
+            deliveryFee={deliveryFee}
+          />
           <Field label={t.order.reference}>
             {(id) => (
               <input

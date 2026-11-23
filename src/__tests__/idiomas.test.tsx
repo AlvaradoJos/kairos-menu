@@ -96,6 +96,9 @@ describe('Idiomas', { timeout: 20_000 }, () => {
     await user.click(screen.getByRole('button', { name: /View order/ }));
     const order = screen.getByRole('dialog', { name: 'Your order' });
     expect(within(order).getByText('Chicken breast · + Fries')).toBeTruthy();
+    // "One less" y "Remove" no se parecen: con lector de pantalla no se borra la línea por error.
+    expect(within(order).getByRole('button', { name: 'One less Bacon & Chesse' })).toBeTruthy();
+    expect(within(order).getByRole('button', { name: 'Remove Bacon & Chesse' })).toBeTruthy();
 
     // Sin datos, los errores salen en inglés.
     await user.click(within(order).getByRole('button', { name: 'Send on WhatsApp' }));

@@ -95,6 +95,7 @@ export const es = {
       denied: 'No nos diste permiso para ver tu ubicación. Puedes activarlo en el navegador o solo escribir la dirección.',
       timeout: 'Tu ubicación tardó demasiado. Intenta de nuevo o escribe bien la dirección.',
       unavailable: 'No pudimos encontrar tu ubicación. Intenta de nuevo o escribe bien la dirección.',
+      insecure: 'Esta página no es segura (sin https), así que el navegador no da la ubicación. Escribe la dirección con buenas señas.',
       unsupported: 'Tu navegador no permite compartir la ubicación. Escribe la dirección con buenas señas.',
     },
   },

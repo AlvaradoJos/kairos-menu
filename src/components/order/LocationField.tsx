@@ -3,12 +3,15 @@
 
 import { useState } from 'react';
 import { mapsLink, requestLocation, type GeoPoint, type LocationError } from '../../features/location/location';
+import type { Colones } from '../../features/menu/types';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { Icon } from '../Icon';
 
 interface Props {
   value: GeoPoint | null;
   onChange(location: GeoPoint | null): void;
+  /** Costo del envío. Si ya se sabe, el pedido lo muestra y la pista "te decimos el costo" sobra. */
+  deliveryFee?: Colones;
 }
 
 /**
@@ -16,7 +19,7 @@ interface Props {
  * Si falla, explica por qué con un mensaje distinto para cada caso y deja seguir con la dirección escrita.
  * Jose usa el punto para calcular el envío; la dirección sigue siendo obligatoria.
  */
-export function LocationField({ value, onChange }: Props) {
+export function LocationField({ value, onChange, deliveryFee }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<LocationError | null>(null);
   const { t } = useLanguage();
@@ -59,7 +62,7 @@ export function LocationField({ value, onChange }: Props) {
       )}
       {/* aria-live: el lector de pantalla lee el error en cuanto aparece. */}
       <p className="field__hint" aria-live="polite">
-        {error ? t.location.errors[error] : t.location.hint}
+        {error ? t.location.errors[error] : deliveryFee === undefined && t.location.hint}
       </p>
     </div>
   );

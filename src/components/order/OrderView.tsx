@@ -123,7 +123,7 @@ export function OrderView(props: Props) {
               </p>
             ))}
 
-            <OrderFormFields form={form} errors={errors} onChange={update} />
+            <OrderFormFields form={form} errors={errors} onChange={update} deliveryFee={deliveryFee} />
 
             <div role="alert">
               {hasErrors(errors) && <p className="field__error">{t.order.missingData}</p>}

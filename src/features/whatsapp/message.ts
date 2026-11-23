@@ -10,7 +10,9 @@ import type { Colones, MenuSection } from '../menu/types';
 import { deliveryFeeFor, orderTotal, orderWarnings, warningText } from '../order-form/totals';
 import { ORDER_TYPE_LABEL, PAYMENT_LABEL, type OrderForm } from '../order-form/validation';
 
-// Sin emojis: al abrir el enlace de WhatsApp se ven como "�". Volver a probar en un celular real antes de reponerlos.
+// Sin emojis en el saludo. Se veían como "�" por la redirección de wa.me; con api.whatsapp.com/send los
+// emojis llegan bien (D-01, y las pruebas lo revisan). Se podrían reponer, pero primero hay que probarlo en un
+// celular real. No volver a wa.me.
 const GREETING = "¡Hola Kairos Food's! Quiero hacer un pedido";
 
 /** Texto del cliente en una sola línea: un salto de línea se lee en la cocina como otro platillo. */

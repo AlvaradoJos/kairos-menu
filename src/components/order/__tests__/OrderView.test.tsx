@@ -273,7 +273,7 @@ describe('OrderView: ubicación para el express', () => {
     expect(screen.getByRole('button', { name: 'Compartir mi ubicación' })).toBeTruthy();
   });
 
-  it('en un sitio sin HTTPS avisa que la ubicación no está disponible', async () => {
+  it('en un sitio sin HTTPS lo dice con su propio aviso, sin invitar a reintentar', async () => {
     const user = userEvent.setup();
     const getCurrentPosition = vi.fn();
     mockGeolocation(getCurrentPosition);
@@ -282,7 +282,23 @@ describe('OrderView: ubicación para el express', () => {
 
     await fillExpress(user);
     await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
-    expect(screen.getByText(/No pudimos encontrar tu ubicación/)).toBeTruthy();
+    const notice = screen.getByText(/no es segura \(sin https\)/);
+    expect(notice.textContent).not.toMatch(/Intenta de nuevo/);
     expect(getCurrentPosition).not.toHaveBeenCalled();
+  });
+
+  it('sin costo de envío definido, la pista dice que el costo se da después', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" />);
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByText('Te decimos el costo del envío al recibir el pedido.')).toBeTruthy();
+  });
+
+  it('con costo de envío definido, la pista no contradice la línea de envío', async () => {
+    const user = userEvent.setup();
+    render(<Harness whatsappNumber="50688887777" deliveryFee={1000} />);
+    await user.click(screen.getByLabelText('Express'));
+    expect(screen.getByText('₡1.000')).toBeTruthy();
+    expect(screen.queryByText(/Te decimos el costo del envío/)).toBeNull();
   });
 });

@@ -10,9 +10,10 @@ export interface GeoPoint {
 /**
  * Por qué no se pudo leer la ubicación. La interfaz traduce cada caso con el diccionario.
  * denied: el cliente dijo que no al permiso · timeout: el GPS tardó más de 10 s ·
- * unavailable: el GPS no encontró el punto o el sitio no usa HTTPS · unsupported: el navegador no tiene GPS.
+ * unavailable: el GPS no encontró el punto · insecure: el sitio no usa HTTPS (reintentar no sirve) ·
+ * unsupported: el navegador no tiene GPS.
  */
-export type LocationError = 'denied' | 'timeout' | 'unavailable' | 'unsupported';
+export type LocationError = 'denied' | 'timeout' | 'unavailable' | 'insecure' | 'unsupported';
 
 /** 6 decimales ≈ 10 cm: de sobra para encontrar la casa. */
 function coords({ lat, lng }: GeoPoint): string {
@@ -53,7 +54,7 @@ export function requestLocation(
     // Solo se corta si el navegador dice claramente que el sitio no es seguro. Si no lo dice
     // (undefined, navegadores viejos), se pregunta al GPS y el navegador decide.
     if (secure === false) {
-      reject('unavailable' satisfies LocationError);
+      reject('insecure' satisfies LocationError);
       return;
     }
     geo.getCurrentPosition(
