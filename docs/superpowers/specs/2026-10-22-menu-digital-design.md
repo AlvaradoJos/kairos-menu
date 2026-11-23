@@ -14,7 +14,7 @@ Una página web, pensada primero para celular, donde los clientes de Kairos Food
 | Tema | Decisión |
 |---|---|
 | Propósito | Ver el menú y pedir por WhatsApp. Sin pagos en línea ni cuentas de usuario. |
-| Quién edita el menú | El equipo de desarrollo, editando `src/data/menu.ts` y volviendo a publicar. |
+| Quién edita el menú | El equipo de desarrollo, editando `menu.json` y volviendo a publicar (`src/data/menu.ts` solo lo lee). |
 | Tipos de pedido | Para recoger y express. |
 | Variantes | Tamaños con precio propio, elección carne/pollo, adicionales con precio fijo y notas libres. |
 | Stack | Vite + React + TypeScript, sitio estático. Pruebas con Vitest. |
@@ -132,13 +132,13 @@ Una sola página, primero para celular y adaptable a escritorio.
 ```
 ¡Hola Kairos Food's! Quiero hacer un pedido
 
-1× Bacon & Cheese (Pechuga de pollo) — ₡3800
-   + Papas fritas — ₡1200
-2× Taco sencillo (Carne) — ₡2000
-1× Papipollo (Grande) — ₡5000
+1× Bacon & Chesse (Pechuga de pollo) — ₡3.800
+   + Papas fritas — ₡1.200
+2× Taco sencillo (Carne) — ₡2.000
+1× Papipollo (Grandes) — ₡5.000
    Nota: sin pico de gallo
 
-Total: ₡12000
+Total: ₡12.000
 
 Nombre: Ana
 Tipo: Express
