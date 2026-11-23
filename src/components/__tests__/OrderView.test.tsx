@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MENU } from '../../data/menu';
 import { setNote, setQuantity, type CartLine } from '../../features/cart/cart';
 import { EMPTY_FORM, type OrderForm } from '../../features/order-form/validation';
@@ -189,8 +189,14 @@ describe('OrderView: ubicación para el express', () => {
     Object.defineProperty(navigator, 'geolocation', { configurable: true, value: { getCurrentPosition: impl } });
   }
 
+  // jsdom no trae isSecureContext: se simula un sitio con HTTPS, como GitHub Pages.
+  beforeEach(() => {
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: true });
+  });
+
   afterEach(() => {
     Object.defineProperty(navigator, 'geolocation', { configurable: true, value: undefined });
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: undefined });
   });
 
   async function fillExpress(user: ReturnType<typeof userEvent.setup>) {
@@ -220,7 +226,8 @@ describe('OrderView: ubicación para el express', () => {
     await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
 
     const text = new URL(open.mock.calls[0][0] as string).searchParams.get('text') ?? '';
-    expect(text).toContain('Ubicación: https://www.google.com/maps?q=9.932543,-84.079578');
+    expect(text).toContain('Ubicación (Google Maps): https://www.google.com/maps?q=9.932543,-84.079578');
+    expect(text).toContain('Waze: https://waze.com/ul?ll=9.932543,-84.079578&navigate=yes');
   });
 
   it('se puede quitar la ubicación antes de enviar', async () => {
@@ -251,5 +258,31 @@ describe('OrderView: ubicación para el express', () => {
     expect(screen.getByText(/No nos diste permiso/)).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Enviar por WhatsApp' }));
     expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('si el GPS tarda demasiado, lo dice y deja intentar de nuevo', async () => {
+    const user = userEvent.setup();
+    mockGeolocation((_ok, fail) =>
+      fail?.({ code: 3, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 } as GeolocationPositionError),
+    );
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText(/tardó demasiado/)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Compartir mi ubicación' })).toBeTruthy();
+  });
+
+  it('en un sitio sin HTTPS avisa que la ubicación no está disponible', async () => {
+    const user = userEvent.setup();
+    const getCurrentPosition = vi.fn();
+    mockGeolocation(getCurrentPosition);
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: false });
+    render(<Harness whatsappNumber="50688887777" />);
+
+    await fillExpress(user);
+    await user.click(screen.getByRole('button', { name: 'Compartir mi ubicación' }));
+    expect(screen.getByText(/No pudimos encontrar tu ubicación/)).toBeTruthy();
+    expect(getCurrentPosition).not.toHaveBeenCalled();
   });
 });

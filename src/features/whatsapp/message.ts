@@ -1,5 +1,5 @@
 import { resolveLine, type CartLine } from '../cart/cart';
-import { mapsLink } from '../location/location';
+import { mapsLink, wazeLink } from '../location/location';
 import type { Lang } from '../../i18n/language';
 import { formatColones } from '../menu/price';
 import type { Colones, MenuSection } from '../menu/types';
@@ -50,7 +50,10 @@ export function buildOrderMessage(
   if (form.type === 'express') {
     out.push(`Dirección: ${oneLine(form.address)}`);
     if (oneLine(form.reference)) out.push(`Referencia: ${oneLine(form.reference)}`);
-    if (form.location) out.push(`Ubicación: ${mapsLink(form.location)}`);
+    if (form.location) {
+      out.push(`Ubicación (Google Maps): ${mapsLink(form.location)}`);
+      out.push(`Waze: ${wazeLink(form.location)}`);
+    }
   }
   if (form.type === 'recoger' && form.pickupTime) out.push(`Hora: ${form.pickupTime}`);
   if (form.payment) out.push(`Pago: ${PAYMENT_LABEL[form.payment]}`);

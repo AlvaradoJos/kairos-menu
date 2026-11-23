@@ -51,16 +51,30 @@ describe('buildOrderMessage', () => {
     expect(message).toContain('Total: ₡6.600');
   });
 
-  it('en express adjunta el enlace de la ubicación debajo de la dirección', () => {
+  it('en express adjunta los enlaces de Google Maps y Waze debajo de la dirección y la referencia', () => {
     const form: OrderForm = { ...SPEC_FORM, reference: 'portón negro', location: { lat: 9.9325427, lng: -84.0795782 } };
     expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).toContain(
-      'Dirección: Barrio X, 200 m sur de la iglesia\nReferencia: portón negro\nUbicación: https://www.google.com/maps?q=9.932543,-84.079578\n',
+      [
+        'Dirección: Barrio X, 200 m sur de la iglesia',
+        'Referencia: portón negro',
+        'Ubicación (Google Maps): https://www.google.com/maps?q=9.932543,-84.079578',
+        'Waze: https://waze.com/ul?ll=9.932543,-84.079578&navigate=yes',
+        '',
+      ].join('\n'),
     );
+  });
+
+  it('en express sin ubicación compartida no agrega enlaces', () => {
+    const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined);
+    expect(message).not.toContain('Ubicación');
+    expect(message).not.toContain('Waze');
   });
 
   it('para recoger no manda la ubicación aunque se haya compartido', () => {
     const form: OrderForm = { ...SPEC_FORM, type: 'recoger', location: { lat: 9.93, lng: -84.08 } };
-    expect(buildOrderMessage(MENU, SPEC_CART, form, undefined)).not.toContain('Ubicación');
+    const message = buildOrderMessage(MENU, SPEC_CART, form, undefined);
+    expect(message).not.toContain('Ubicación');
+    expect(message).not.toContain('Waze');
   });
 
   it('agrega la línea de envío y la suma al total cuando hay costo', () => {

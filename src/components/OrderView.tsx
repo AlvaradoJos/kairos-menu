@@ -1,6 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import {
-  LOCATION_ERROR_TEXT,
   mapsLink,
   requestLocation,
   type GeoPoint,
@@ -346,6 +345,13 @@ interface LocationFieldProps {
   value: GeoPoint | null;
   onChange(location: GeoPoint | null): void;
 }
+
+const LOCATION_ERROR_TEXT: Record<LocationError, string> = {
+  denied: 'No nos diste permiso para ver tu ubicación. Puedes activarlo en el navegador o solo escribir la dirección.',
+  timeout: 'Tu ubicación tardó demasiado. Intenta de nuevo o escribe bien la dirección.',
+  unavailable: 'No pudimos encontrar tu ubicación. Intenta de nuevo o escribe bien la dirección.',
+  unsupported: 'Tu navegador no permite compartir la ubicación. Escribe la dirección con buenas señas.',
+};
 
 /** Botón opcional para mandar el punto exacto. Jose lo usa para calcular el envío; la dirección sigue siendo obligatoria. */
 function LocationField({ value, onChange }: LocationFieldProps) {
