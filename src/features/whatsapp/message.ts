@@ -1,5 +1,6 @@
 import { resolveLine, type CartLine } from '../cart/cart';
 import { mapsLink } from '../location/location';
+import type { Lang } from '../../i18n/language';
 import { formatColones } from '../menu/price';
 import type { Colones, MenuSection } from '../menu/types';
 import { deliveryFeeFor, orderTotal, orderWarnings } from '../order-form/totals';
@@ -22,6 +23,7 @@ export function buildOrderMessage(
   cart: CartLine[],
   form: OrderForm,
   deliveryFee: Colones | undefined,
+  customerLang: Lang = 'es',
 ): string {
   const out: string[] = [GREETING, ''];
 
@@ -53,6 +55,8 @@ export function buildOrderMessage(
   if (form.type === 'recoger' && form.pickupTime) out.push(`Hora: ${form.pickupTime}`);
   if (form.payment) out.push(`Pago: ${PAYMENT_LABEL[form.payment]}`);
   if (oneLine(form.comment)) out.push(`Comentario: ${oneLine(form.comment)}`);
+  // El mensaje no se traduce: así lo lee igual quien atiende. Esta línea avisa en qué idioma responder.
+  if (customerLang === 'en') out.push('Idioma del cliente: inglés');
 
   const warnings = orderWarnings(menu, cart, form, deliveryFee);
   if (warnings.length > 0) out.push('', ...warnings);

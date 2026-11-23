@@ -116,6 +116,18 @@ describe('buildOrderMessage', () => {
     expect(buildOrderMessage(MENU, cart, SPEC_FORM, undefined)).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
+  it('avisa el idioma del cliente si usó la página en inglés; el resto sigue en español', () => {
+    const message = buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined, 'en');
+    expect(message).toContain('Comentario: tocar el timbre\nIdioma del cliente: inglés\n');
+    expect(message).toContain('Tipo: Express');
+    expect(message).toContain('Pago: SINPE Móvil');
+  });
+
+  it('no agrega la línea de idioma si el cliente usó la página en español', () => {
+    expect(buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined, 'es')).not.toContain('Idioma');
+    expect(buildOrderMessage(MENU, SPEC_CART, SPEC_FORM, undefined)).not.toContain('Idioma');
+  });
+
   it('ignora líneas que ya no existen en el menú', () => {
     const cart: CartLine[] = [...SPEC_CART, { itemId: 'no-existe', extraIds: [], quantity: 1 }];
     expect(buildOrderMessage(MENU, cart, SPEC_FORM, undefined)).toContain('Total: ₡12.000');
@@ -139,6 +151,17 @@ describe('buildWhatsAppUrl', () => {
 
   it('deja solo los dígitos del número', () => {
     expect(buildWhatsAppUrl('+506 8888-7777', 'hola')).toBe(`${BASE}&text=hola`);
+  });
+
+  it('acepta el número con +, espacios y guiones', () => {
+    expect(buildWhatsAppUrl('+506 8888-7777', '')).toBe(BASE);
+    expect(buildWhatsAppUrl('506-8888-7777', '')).toBe(BASE);
+    expect(buildWhatsAppUrl(' +506 8888 7777 ', '')).toBe(BASE);
+  });
+
+  it('codifica tildes, ₡ y saltos de línea con encodeURIComponent', () => {
+    const url = buildWhatsAppUrl('50688887777', 'Dirección: Barrio Ñ\nTotal: ₡3.800');
+    expect(url).toBe(`${BASE}&text=Direcci%C3%B3n%3A%20Barrio%20%C3%91%0ATotal%3A%20%E2%82%A13.800`);
   });
 
   it('omite el texto si el mensaje está vacío', () => {
