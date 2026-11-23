@@ -1,3 +1,5 @@
+// Íconos SVG dibujados a mano (+, −, ×, pin), sin librería. Los usan los botones.
+
 interface Props {
   name: 'plus' | 'minus' | 'close' | 'pin';
 }

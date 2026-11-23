@@ -39,7 +39,8 @@ export function SectionNav({ sections }: Props) {
     const nav = navRef.current;
     const chip = nav?.querySelector<HTMLElement>('.is-active');
     if (!nav || !chip) return;
-    // El smooth de JavaScript no respeta prefers-reduced-motion por sí solo.
+    // El smooth de JavaScript no respeta prefers-reduced-motion por sí solo: si la persona pidió menos
+    // movimiento en su sistema (mareo, vértigo), el salto es inmediato.
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     nav.scrollTo?.({
       left: chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2,

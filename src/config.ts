@@ -1,6 +1,9 @@
+// Datos del negocio (WhatsApp, envío, horario, dirección y redes). Los usan App, Header y Footer.
+
 import type { Colones } from './features/menu/types';
 import { parseWhatsappNumber } from './features/whatsapp/number';
 
+/** Datos del negocio que muestra la página. */
 export interface BusinessConfig {
   /** Formato internacional, solo dígitos o con +, espacios o guiones. Ej.: "50688887777". */
   whatsappNumber?: string;

@@ -1,3 +1,6 @@
+// Manejo del foco de las ventanas modales (platillo, pedido y '¿Ya enviaste?'), para usar con teclado
+// y lector de pantalla. Lo usan ItemSheet, OrderView y SentDialog.
+
 import { useEffect, type RefObject } from 'react';
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -30,6 +33,8 @@ export function useDialogFocus(
         onClose();
         return;
       }
+      // Foco atrapado: con el teclado, Tab desde el último control vuelve al primero (y Shift+Tab al revés).
+      // Sin esto, el foco se iría a la página de atrás, que el cliente no ve mientras la ventana está abierta.
       if (e.key !== 'Tab') return;
       const focusable = [...container.querySelectorAll<HTMLElement>(FOCUSABLE)];
       if (focusable.length === 0) return;

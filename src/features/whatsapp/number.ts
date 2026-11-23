@@ -1,3 +1,5 @@
+// Validación del número de WhatsApp del negocio. La usa config.ts.
+
 /**
  * Lee el número de WhatsApp de la variable de entorno `VITE_WHATSAPP_NUMBER`.
  * Acepta dígitos, +, espacios y guiones; devuelve solo los dígitos (10 a 15, con código de país)

@@ -1,8 +1,12 @@
+// Formulario del pedido: sus tipos, los textos en español del mensaje y la validación.
+// Lo usan OrderView, OrderFormFields y message.ts.
+
 import type { GeoPoint } from '../location/location';
 
 export type OrderType = 'recoger' | 'express';
 export type PaymentMethod = 'efectivo' | 'sinpe' | 'tarjeta';
 
+/** Lo que el cliente escribe en el formulario. Vive solo en memoria: no se guarda en localStorage. */
 export interface OrderForm {
   name: string;
   type: OrderType | '';
@@ -16,6 +20,7 @@ export interface OrderForm {
   comment: string;
 }
 
+/** Formulario vacío, al abrir la página. */
 export const EMPTY_FORM: OrderForm = {
   name: '',
   type: '',
@@ -55,6 +60,7 @@ export function validateOrderForm(form: OrderForm): FormErrors {
   return errors;
 }
 
+/** Si hay al menos un error. */
 export function hasErrors(errors: FormErrors): boolean {
   return Object.keys(errors).length > 0;
 }

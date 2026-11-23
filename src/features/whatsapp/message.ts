@@ -1,9 +1,12 @@
+// Mensaje de WhatsApp del pedido y el enlace que lo abre. Lo usan OrderView y Header.
+// Los datos vienen del carrito, del menú (MENU) y del formulario; el número, de config.ts.
+
+import { es } from '../../i18n/es';
+import type { Lang } from '../../i18n/language';
 import { resolveLine, type CartLine } from '../cart/cart';
 import { mapsLink, wazeLink } from '../location/location';
-import type { Lang } from '../../i18n/language';
 import { formatColones } from '../menu/price';
 import type { Colones, MenuSection } from '../menu/types';
-import { es } from '../../i18n/es';
 import { deliveryFeeFor, orderTotal, orderWarnings, warningText } from '../order-form/totals';
 import { ORDER_TYPE_LABEL, PAYMENT_LABEL, type OrderForm } from '../order-form/validation';
 
@@ -19,6 +22,10 @@ function oneLine(text: string): string {
     .join(', ');
 }
 
+/**
+ * Arma el texto del pedido que recibe el negocio: platillos, total, datos del cliente y avisos.
+ * Siempre en español, aunque el cliente use la página en inglés (ADR 0007).
+ */
 export function buildOrderMessage(
   menu: MenuSection[],
   cart: CartLine[],
@@ -31,7 +38,9 @@ export function buildOrderMessage(
   for (const line of cart) {
     const resolved = resolveLine(menu, line);
     if (!resolved) continue;
-    const details = [resolved.size?.label, line.choice].filter((d): d is string => Boolean(d));
+    const details: string[] = [];
+    if (resolved.size) details.push(resolved.size.label);
+    if (line.choice) details.push(line.choice);
     const suffix = details.length > 0 ? ` (${details.join(', ')})` : '';
     out.push(`${line.quantity}× ${resolved.item.name}${suffix} — ${formatColones(resolved.unitBase * line.quantity)}`);
     for (const extra of resolved.extras) {
@@ -73,6 +82,9 @@ export function buildOrderMessage(
  * la redirección de wa.me cambia los emojis (p. ej. los que el cliente escribe en una nota) por "�" (D-01).
  */
 export function buildWhatsAppUrl(phone: string, message: string): string {
+  // El número va solo con dígitos y el código de país, como pide WhatsApp (sin +, espacios ni guiones).
+  // encodeURIComponent convierte tildes, ₡, &, # y saltos de línea en %XX: sin eso, un "&" o un "#"
+  // en una nota cortaría el mensaje y las tildes podrían llegar dañadas.
   const base = `https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}`;
   return message ? `${base}&text=${encodeURIComponent(message)}` : base;
 }
