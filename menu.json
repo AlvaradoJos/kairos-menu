@@ -311,7 +311,6 @@
           "id": "tejano-bbq",
           "nombre": "Tejano BBQ",
           "descripcion": "Tortilla de harina, pechuga de pollo frita, tocineta, papas tostadas, salsa de queso y bbq",
-          "descripcion_en": "Flour tortilla, fried chicken breast, bacon, crispy potatoes, cheese sauce and BBQ sauce",
           "precio": 3000
         }
       ]
@@ -808,7 +807,8 @@
     "Tortillas con queso, Empanadas, Papas Fritas y Pollo Frito no tienen descripción. ¿De qué son las empanadas?",
     "Strips de Pollo \"con acompañamiento\": ¿cuál acompañamiento?",
     "Proteínas disponibles en el casado y si la bebida es fija.",
-    "Ortografía del menú impreso (Chesse, Burguer, mozarella, \"Tortillas frita\", Food's): ¿la corregimos en las versiones nuevas?"
+    "Ortografía del menú impreso (Chesse, Burguer, mozarella, \"Tortillas frita\", Food's): ¿la corregimos en las versiones nuevas?",
+    "Tejano BBQ lleva \"papas tostadas\": ¿son papas fritas tostadas o papitas de paquete? Hasta saberlo, en inglés se muestra la descripción en español."
   ],
   "notas_estructura": [
     "id: estable, lo usa el carrito guardado; no cambiarlo.",

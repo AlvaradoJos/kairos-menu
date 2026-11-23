@@ -16,6 +16,7 @@ El spec dejaba "varios idiomas" fuera de la v1 porque el público es local y el 
 
 ## Consecuencias
 - Agregar un texto es agregarlo en `es.ts` y en `en.ts`; TypeScript avisa si se olvida uno.
-- Las traducciones de `menu.json` las hizo el equipo y [PENDIENTE: revisión de Jose]. Algunas explican un término tico entre paréntesis ("natilla (sour cream)", "patacones (fried green plantain)") sin cambiar ingredientes.
+- Las traducciones de `menu.json` las hizo el equipo y Jose las revisó el 2026-11-22: "Carne" es "Beef" (res), "queso amarillo" es "American cheese" y se dejan las explicaciones entre paréntesis para el turista ("natilla (sour cream)", "patacones (fried green plantain)"). Tejano BBQ queda sin `descripcion_en` hasta confirmar qué son las "papas tostadas" (está en `pendiente_confirmar_con_el_negocio`), así que en inglés se ve en español.
+- En inglés, el tipo de pedido "Express" se muestra como "Delivery (Express)" (aprobado por Jose).
 - `ORDER_TYPE_LABEL` y `PAYMENT_LABEL` (`validation.ts`) quedan solo para el mensaje en español; la página usa `t.order.types` y `t.order.payments`.
 - Un tercer idioma sería otro diccionario con el mismo tipo y otro campo en `menu.json`; hoy queda fuera de alcance.

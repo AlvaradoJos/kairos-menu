@@ -149,6 +149,8 @@ describe('MENU', () => {
     expect(tipico.name).toBe('Típico');
     expect(tipico.descriptionEn).toBe('Gallo pinto, egg, sweet plantain, bread and coffee');
     expect(allItems.find((i) => i.id === 'alitas')?.sizes?.[0].labelEn).toBe('6 pieces');
+    // "Papas tostadas" está por confirmar con el negocio: sin inglés, la página muestra el español.
+    expect(allItems.find((i) => i.id === 'tejano-bbq')?.descriptionEn).toBeUndefined();
   });
 
   it('solo Desayunos marca adicionales sin precio', () => {
