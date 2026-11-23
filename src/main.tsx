@@ -1,3 +1,5 @@
+// Punto de entrada: carga las fuentes y los estilos y monta la app dentro de LanguageProvider.
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
