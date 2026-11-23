@@ -309,7 +309,9 @@ Verificación después de los cambios: `npm test` 116 pruebas en 13 archivos, to
 | 3 | Precios ₡3.800, ortografía del menú impreso, mensaje sin emojis | Aceptada |
 | 4 | GitHub Pages con GitHub Actions | Propuesta |
 | 5 | Todo servido desde el propio sitio, con CSP | Aceptada |
-| 6 | Número de WhatsApp por variable de entorno | Propuesta (nueva) |
+| 6 | Número de WhatsApp por variable de entorno | Propuesta |
+| 7 | Español e inglés con diccionario propio | Aceptada (nueva) |
+| 8 | Ubicación opcional sin guardarla, con Maps y Waze | Aceptada (nueva) |
 
 ### 8.3 Cambios de alcance
 
@@ -317,5 +319,6 @@ Verificación después de los cambios: `npm test` 116 pruebas en 13 archivos, to
 |---|---|---|
 | 2026-11-07 | Agregar RF-13 (número por variable de entorno y número de pruebas para la demo) | Implementado; [PENDIENTE: aprobación del equipo según el control de cambios de `02-prefactibilidad.md`] |
 | 2026-11-18 | Agregar A13 / RF-16 / HU-09 (ubicación opcional por GPS en express) | Implementado en `d4f9aac` con pruebas; [PENDIENTE: aprobación del equipo y del negocio] |
+| 2026-11-22 | Agregar A14: español e inglés (ADR 7). Ubicación con Waze, error de tiempo agotado y aviso sin HTTPS (ADR 8) | Implementado en la rama `semana-3` con pruebas; aprobado por Jose el 2026-11-22 |
 
 No hubo otros cambios de alcance respecto a `01-propuesta.md`.

@@ -26,6 +26,8 @@ Antes de cerrar una tarea: `npm test`, `npm run typecheck` y `npm run build`.
 - Los datos del negocio (costo de envío, horario, dirección, redes) van en `src/config.ts`. Quedan sin definir hasta que el dueño los dé. El número de WhatsApp sale de `VITE_WHATSAPP_NUMBER` (`.env` en local, variable del repo `WHATSAPP_NUMBER` al publicar); nunca se escribe en el código, en pruebas ni en capturas.
 - La lógica va en `src/features/*/` como funciones puras con pruebas en `__tests__/`. Los componentes no calculan precios ni arman el texto del pedido.
 - Los colores salen de las variables de `src/styles/tokens.css`. No hay valores hex fuera de ese archivo.
+- Idiomas (ADR 0007): todo texto visible va en `src/i18n/es.ts` y `src/i18n/en.ts`, nunca escrito en un componente. La lógica devuelve claves o datos, no textos. Los nombres de los platillos no se traducen; categorías, notas y descripciones llevan `_en` en `menu.json`. El mensaje al negocio va siempre en español. La clave `kairos.lang.v1` y `kairos.cart.v1` no se cambian.
+- Ubicación (ADR 0008): opcional, solo en express, se pide al tocar el botón y no se guarda en `localStorage` ni se manda a otro lado que el mensaje.
 - Precios en colones enteros, mostrados con `formatColones` (`₡3.800`, punto de miles).
 - Movimiento corto y siempre con alternativa para `prefers-reduced-motion`.
 
@@ -39,5 +41,5 @@ Antes de cerrar una tarea: `npm test`, `npm run typecheck` y `npm run build`.
 
 - La lista `pendiente_confirmar_con_el_negocio` de `menu.json` (precio de La Rascacielos, ortografía, adicionales de desayuno, etc.).
 - Los datos de `src/config.ts`.
-- El mensaje de WhatsApp va sin emojis: en la página de wa.me se veían como "�". Reponerlos solo después de probar en un celular real que llegan bien.
+- El mensaje de WhatsApp va sin emojis. Se veían como "�" por el atajo `wa.me`; el sitio ahora abre `api.whatsapp.com/send` (ADR 0001, defecto D-01). Reponerlos solo después de probar en un celular real que llegan bien.
 - Dónde publicar y, si se quiere, un dominio propio.

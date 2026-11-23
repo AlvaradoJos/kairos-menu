@@ -12,3 +12,4 @@ Un sitio estático (Vite + React + TypeScript) sin backend. El cliente arma el p
 - Costo de hosting cero y nada que mantener en un servidor.
 - El restaurante confirma cada pedido a mano por WhatsApp. No hay registro central de pedidos.
 - Toda la lógica de precios es código puro con pruebas (`src/features/*`).
+- El número va solo con dígitos y el código de país, y el texto con `encodeURIComponent`, como pide la guía "click to chat" de WhatsApp (https://faq.whatsapp.com/5913398998672934). El mensaje va siempre en español (ADR 0007) y, en express, puede traer los enlaces de la ubicación (ADR 0008).

@@ -80,7 +80,8 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 | A10 | Accesibilidad básica: controles de 44 px o más, foco en ventanas, sin scroll horizontal a 390 px. | Hecho |
 | A11 | Publicación en GitHub Pages con revisión automática (pruebas, tipos y build). | Configurado, sin publicar |
 | A12 | Número de WhatsApp de pruebas para la demo, separado del número real del negocio. | Semana 3 / 5 |
-| A13 | Ubicación opcional por GPS en pedidos express: el mensaje lleva un enlace de Google Maps. La dirección sigue siendo obligatoria. | Hecho. Agregado el 2026-11-18 como cambio de alcance (`02-prefactibilidad.md` §9.2) |
+| A13 | Ubicación opcional por GPS en pedidos express: el mensaje lleva enlaces de Google Maps y Waze. La dirección sigue siendo obligatoria. | Hecho. Agregado el 2026-11-18 como cambio de alcance (`02-prefactibilidad.md` §9.2); Waze y errores por caso el 2026-11-22 (ADR 8) |
+| A14 | Página en español e inglés (botón ES \| EN, se recuerda la elección). El mensaje al negocio va siempre en español. | Hecho. Agregado el 2026-11-22 como cambio de alcance: lo pide la entrega de la Semana 3 (ADR 7) |
 
 ### 4.2 Queda afuera (y por qué)
 
@@ -96,7 +97,7 @@ Redactados con verbos del nivel 4 de la taxonomía de Bloom (analizar).
 | Precios de adicionales de desayuno | El menú impreso dice "desde ₡500" sin lista. El cliente los pide en notas y el negocio confirma el precio. |
 | Integración con la API de WhatsApp Business o envío automático | Requiere cuenta de empresa aprobada por Meta, servidor y costo por conversación. Con un enlace de WhatsApp el cliente envía el mensaje desde su propio WhatsApp. |
 | Seguimiento del estado del pedido | Sin servidor no hay cómo notificar. La confirmación la hace el negocio por WhatsApp. |
-| Varios idiomas | El público es local y el menú impreso está en español. |
+| Más idiomas que español e inglés | El público es local; el inglés entró por la Semana 3 del curso (A14). Un tercer idioma no tiene quien lo pida ni lo revise. |
 | Aplicación nativa (Android/iOS) | El sitio abre en cualquier navegador del celular sin instalar nada. |
 
 ## 5. Funcionalidades iniciales y necesidades de usuario

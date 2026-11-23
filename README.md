@@ -4,6 +4,15 @@ Página web donde los clientes de Kairos Foods ven el menú desde el celular, ar
 
 Trabajo de Horizon Software Solutions. Contexto del cliente: `CLAUDE.md`. Reglas para quien programe: `AGENTS.md`.
 
+## Qué hace (Semana 3)
+
+- **Menú y carrito:** las 11 secciones y 51 platillos de `menu.json`; tamaños, opción (carne o pollo…), adicionales, notas y cantidades. El carrito se guarda en el celular y sobrevive a recargar la página.
+- **Pedido por WhatsApp:** el formulario valida los datos y abre `api.whatsapp.com/send` con el mensaje completo, sin emojis y **siempre en español**.
+- **Español e inglés:** botón **ES | EN** arriba a la derecha. Cambia toda la página y se recuerda al volver. Si el cliente usa inglés, el mensaje agrega "Idioma del cliente: inglés" (ADR 0007).
+- **Ubicación en express:** botón opcional "Compartir mi ubicación"; el mensaje trae enlaces de Google Maps y Waze. La ubicación no se guarda en ningún lado (ADR 0008).
+
+Recorrido del código, archivo por archivo, para explicarlo en clase: `docs/GUIA-DEL-CODIGO.md`.
+
 ## Cambiar precios, platillos o descripciones
 
 Todo el menú está en **`menu.json`**. Ningún otro archivo tiene precios.
@@ -20,6 +29,43 @@ Otros campos útiles:
 - `"nota"` de una categoría: la franja amarilla al final de la sección. `{precio}` se reemplaza por el precio del adicional.
 - `"adicionales"`: extras con precio (papas o aros por ₡1.200, duplicar nachos por ₡2.000).
 - `"elegir"`: carne o pollo, etc. No cambia el precio.
+- Campos `_en` (`nombre_en`, `nota_en`, `descripcion_en`, `etiqueta_en`, `opciones_en`): el texto en inglés. Son opcionales: si falta uno, la página muestra el español. Los nombres de los platillos no se traducen.
+
+## Cambiar o agregar un texto en los dos idiomas
+
+Ningún texto visible está escrito en un componente: todos salen de `src/i18n/`.
+
+1. Abrir `src/i18n/es.ts` y cambiar o agregar el texto en su grupo (por ejemplo `order.send: 'Enviar por WhatsApp'`).
+2. Hacer lo mismo en `src/i18n/en.ts` (`order.send: 'Send on WhatsApp'`). Si se olvida, `npm run typecheck` falla y dice cuál falta.
+3. En el componente, usarlo con el hook: `const { t } = useLanguage();` y `{t.order.send}`.
+4. Si el texto lleva un dato, se escribe como función: `` add: (name: string) => `Agregar ${name}` ``, y se usa `t.menu.add(item.name)`.
+5. Los textos del **mensaje de WhatsApp** no se traducen: viven en `src/features/whatsapp/message.ts` y `ORDER_TYPE_LABEL` / `PAYMENT_LABEL` (`validation.ts`).
+
+## Cómo funciona la ubicación
+
+- Solo en pedidos **Express**, y solo si el cliente toca "Compartir mi ubicación". La dirección sigue siendo obligatoria.
+- El navegador pide permiso y el GPS responde en hasta 10 segundos. Si el cliente no da permiso, si tarda demasiado, si no encuentra la ubicación o si el navegador no tiene GPS, sale un aviso para cada caso y el pedido se envía igual con la dirección.
+- **Necesita HTTPS** (o `localhost` en desarrollo): los navegadores solo dan la ubicación en sitios seguros. GitHub Pages ya es HTTPS. Si abrís el sitio desde otro celular con `npm run dev -- --host` (`http://192.168…`), la ubicación va a decir "no disponible": es lo esperado.
+- La ubicación vive solo en el formulario y en el mensaje. No se guarda en `localStorage` ni se manda a ningún otro lado.
+
+## Demo paso a paso (Semana 3)
+
+Con `npm run dev` y un número **de pruebas** en `.env` (nunca el real). Abrir http://localhost:5173 con la vista de celular del navegador (F12 → ícono de celular, 375 px).
+
+**En español**
+1. Bajar por el menú o tocar una sección en la barra (por ejemplo "Hamburguesas").
+2. Tocar **+** en "Bacon & Chesse", elegir "Pechuga de pollo" y "Papas fritas" y tocar "Agregar · ₡5.000".
+3. Tocar **+** en "Típico" (se agrega directo). Recargar la página: el carrito sigue ahí.
+4. Tocar "Ver pedido", subir a 2 el Típico y escribir una nota.
+5. Llenar nombre, escoger **Express**, escribir la dirección y tocar **Compartir mi ubicación** (dar permiso). Aparece "Ubicación lista".
+6. Escoger el pago y tocar **Enviar por WhatsApp**: se abre WhatsApp con el pedido, la dirección y los enlaces de Google Maps y Waze.
+7. Volver a la página y responder "Sí, vaciar carrito".
+
+**En inglés**
+1. Tocar **EN** arriba a la derecha: todo cambia a inglés ("Breakfast", "Add · ₡5.000", "Your order"…). Los nombres de los platillos y los precios quedan igual.
+2. Repetir los pasos 2 a 6 ("Share my location", "Send on WhatsApp").
+3. El mensaje que se abre en WhatsApp sigue en español y termina con "Idioma del cliente: inglés".
+4. Recargar: la página sigue en inglés.
 
 ## Datos del negocio
 
@@ -99,12 +145,17 @@ kairos-menu/
 │   ├── features/             Lógica pura, cada una con __tests__/
 │   │   ├── menu/             Tipos y formato de precios
 │   │   ├── cart/             Carrito y guardado en el celular
-│   │   ├── order-form/       Validación del formulario y totales
+│   │   ├── order-form/       Validación del formulario, totales y avisos
+│   │   ├── location/         GPS del celular y enlaces de Maps y Waze
 │   │   └── whatsapp/         Mensaje, enlace de WhatsApp y número
+│   ├── i18n/                 Diccionarios es/en, idioma elegido y textos del menú
 │   ├── components/           Interfaz (no calcula precios) y sus pruebas
+│   │   └── order/            Ventana "Tu pedido": líneas, formulario, ubicación, diálogo
 │   ├── styles/               tokens.css (colores) y app.css
+│   ├── __tests__/            Pruebas de la app completa (flujo e idiomas)
 │   └── test/                 Menú de prueba para las pruebas
 └── docs/
+    ├── GUIA-DEL-CODIGO.md    Recorrido del código para estudiantes
     ├── adr/                  Decisiones técnicas
     ├── proyecto-final/       Entregables del curso, uno por semana
     ├── superpowers/          Spec y plan aprobados

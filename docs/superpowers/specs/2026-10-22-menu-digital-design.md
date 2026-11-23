@@ -19,10 +19,13 @@ Una página web, pensada primero para celular, donde los clientes de Kairos Food
 | Variantes | Tamaños con precio propio, elección carne/pollo, adicionales con precio fijo y notas libres. |
 | Stack | Vite + React + TypeScript, sitio estático. Pruebas con Vitest. |
 | Hosting | Gratuito, en Netlify o Cloudflare Pages. Se decide al publicar. |
+| Idiomas | Español e inglés, con diccionario propio (`src/i18n/`) y botón ES \| EN. El mensaje al negocio va siempre en español (ADR 0007). |
 
 ## Fuera de alcance (v1)
 
-Pagos en línea, panel de administración, platillos agotados, registro o historial de pedidos, cuentas de usuario, varios idiomas.
+Pagos en línea, panel de administración, platillos agotados, registro o historial de pedidos, cuentas de usuario. Más idiomas que español e inglés.
+
+**Cambio de alcance (2026-11-22):** español e inglés entran al alcance porque los pide la entrega de la Semana 3 del curso. Lo aprobó Jose; el detalle está en el ADR 0007 (`docs/adr/0007-espanol-e-ingles-con-diccionario-propio.md`).
 
 ## Estructura
 
@@ -109,7 +112,7 @@ Una sola página, primero para celular y adaptable a escritorio.
 
 **Partes**
 
-1. **Encabezado:** logo, frase corta y botones "Pedir por WhatsApp" y "Ver menú".
+1. **Encabezado:** logo, frase corta, botones "Pedir por WhatsApp" y "Ver menú", y el botón ES | EN arriba a la derecha.
 2. **Barra de secciones:** fija arriba y deslizable de lado. Al tocar una sección baja hasta ella, y la sección visible queda marcada.
 3. **Menú:** una tarjeta por platillo con nombre, descripción, precio ("desde ₡X" si tiene tamaños) y botón **+**. El `note` de la sección va al final de esta.
 4. **Ventana de opciones** (sube desde abajo): tamaño, proteína, adicionales, notas y cantidad. El botón muestra el precio calculado: "Agregar · ₡3800". Si el platillo no tiene tamaños, elección ni adicionales, **+** lo agrega directo; las notas se pueden poner luego desde "Tu pedido".
@@ -118,7 +121,7 @@ Una sola página, primero para celular y adaptable a escritorio.
    - Lista de platillos con controles para cambiar la cantidad, quitar y editar la nota.
    - Formulario: nombre, tipo de pedido (recoger o express), dirección, ubicación (opcional) y referencia (si es express), hora de recogida (si es para recoger, opcional), método de pago (efectivo, SINPE Móvil o tarjeta) y comentario.
    - Botón **"Enviar por WhatsApp"**.
-   - **Ubicación (express, opcional).** Botón **"Compartir mi ubicación"**, que pide el GPS del celular (`features/location`). Si funciona, el botón cambia a "Ubicación lista", con "Ver en el mapa" y "Quitar ubicación". Si el cliente no da permiso, el GPS falla o el navegador no lo permite, se muestra un aviso corto y el pedido se puede enviar igual. La dirección sigue siendo obligatoria, porque el repartidor necesita las señas. Sirve para que Jose calcule el costo del envío al recibir el pedido: el sitio **no** calcula el envío por distancia. El GPS del navegador solo funciona en HTTPS o en `localhost`.
+   - **Ubicación (express, opcional).** Botón **"Compartir mi ubicación"**, que pide el GPS del celular (`features/location`). Si funciona, el botón cambia a "Ubicación lista", con "Ver en el mapa" y "Quitar ubicación". Si el cliente no da permiso, el GPS tarda más de 10 s, no encuentra el punto o el navegador no lo permite, se muestra un aviso distinto para cada caso y el pedido se puede enviar igual. La dirección sigue siendo obligatoria, porque el repartidor necesita las señas. Sirve para que Jose calcule el costo del envío al recibir el pedido: el sitio **no** calcula el envío por distancia. El GPS del navegador solo funciona en HTTPS o en `localhost`; en un sitio sin HTTPS se muestra el aviso de ubicación no disponible. La ubicación no se guarda en ningún lado (ADR 0008).
 7. **Pie de página:** horario, dirección y redes, solo los que estén definidos en `config.ts`.
 
 ## Flujo del pedido
@@ -149,9 +152,10 @@ Comentario: tocar el timbre
    - El precio junto al platillo es (precio base o del tamaño) × cantidad. Cada adicional va en su propia línea con (precio del adicional) × cantidad. El total es la suma de todo, igual a `cartTotal`.
    - Si `needsPriceConfirmation`, se agrega "⚠️ Adicionales por confirmar".
    - Si es express y `config.deliveryFee` no está definido, se agrega "⚠️ Costo de envío por confirmar". Si está definido, aparece como línea "Envío" y se suma al total.
-   - Si el cliente compartió su ubicación y el pedido es express, va la línea `Ubicación:` con un enlace de Google Maps con 6 decimales, debajo de la dirección y la referencia. En los pedidos para recoger no se incluye.
+   - Si el cliente compartió su ubicación y el pedido es express, van las líneas `Ubicación (Google Maps):` y `Waze:` con enlaces de 6 decimales, debajo de la dirección y la referencia. En los pedidos para recoger no se incluyen (ADR 0008).
+   - Si el cliente usó la página en inglés, se agrega la línea `Idioma del cliente: inglés`. El resto del mensaje sigue en español (ADR 0007).
    - Las líneas de datos vacías (comentario, hora, ubicación) no se incluyen.
-3. **Envío.** Se abre `https://wa.me/<número>?text=<mensaje codificado>` en una pestaña nueva.
+3. **Envío.** Se abre `https://api.whatsapp.com/send?phone=<número>&text=<mensaje codificado con encodeURIComponent>` en una pestaña nueva. Hasta el 2026-11-07 era `wa.me`, que dañaba los emojis (defecto D-01).
 4. **Después del envío.** Al volver a la página se pregunta "¿Ya enviaste tu pedido?", con las opciones **"Sí, vaciar carrito"** y **"No, volver al pedido"**. El carrito nunca se vacía solo.
 
 ## Datos pendientes (`src/config.ts`)
@@ -175,7 +179,8 @@ Con Vitest, en los `__tests__/` de cada feature:
 - **Menú:** cada platillo tiene `price` o `sizes` (exactamente uno), todos los precios son enteros positivos y los `id` no se repiten.
 - **Carrito:** totales con tamaños, adicionales y cantidades; combinación de líneas iguales; descarte de líneas inválidas al cargar.
 - **Validación:** cada campo obligatorio y la regla de dirección para express.
-- **Ubicación:** el enlace de Google Maps; permiso negado, GPS no disponible y navegador sin GPS; el botón solo en express, quitar la ubicación y enviar sin ella.
+- **Ubicación:** los enlaces de Google Maps y Waze; permiso negado, tiempo agotado, GPS no disponible, navegador sin GPS y sitio sin HTTPS; el botón solo en express, quitar la ubicación y enviar sin ella.
+- **Idiomas:** idioma inicial (guardado, navegador, español), cambiar con ES | EN cambia los textos, se recuerda al recargar y el mensaje de WhatsApp no cambia de idioma.
 - **Mensaje:** el ejemplo de arriba sale exacto; los avisos de confirmación aparecen y desaparecen según el caso; el texto se codifica bien en la URL.
 
 Antes de cada publicación se corren `npm test`, `npm run typecheck` y `npm run build`.
